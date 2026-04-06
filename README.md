@@ -9,9 +9,9 @@ django를 이용하여 챗 웹 구현하기 + llm을 이용한 채팅 감정 분
 문장별 감정분석을 통한 디자인 변화
 ## 프론트
 prototype of web page design
-<img width="100" height="100" alt="스크린샷 2026-04-07 002413" src="https://github.com/user-attachments/assets/fca2d41f-684e-4b76-a4e0-522d90cb1315" />
-<img width="150" height="120" alt="스크린샷 2026-04-07 002858" src="https://github.com/user-attachments/assets/f080abf8-9333-4542-ab00-4eb18a35dc03" />
-<img width="150" height="125" alt="스크린샷 2026-04-07 004104" src="https://github.com/user-attachments/assets/da74d678-b4c1-4089-8190-2d939d9aff00" />
+<img width="300" height="300" alt="스크린샷 2026-04-07 002413" src="https://github.com/user-attachments/assets/fca2d41f-684e-4b76-a4e0-522d90cb1315" />
+<img width="300" height="300" alt="스크린샷 2026-04-07 002858" src="https://github.com/user-attachments/assets/f080abf8-9333-4542-ab00-4eb18a35dc03" />
+<img width="300" height="300" alt="스크린샷 2026-04-07 004104" src="https://github.com/user-attachments/assets/da74d678-b4c1-4089-8190-2d939d9aff00" />
 
 
 ## 서버
