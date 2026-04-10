@@ -11,8 +11,8 @@ django를 이용하여 챗 웹 구현하기 + llm을 이용한 채팅 감정 분
 prototype of web page design
 
 <img width="300" height="300" alt="image" src="https://github.com/user-attachments/assets/b94e5334-52e4-4f53-97d8-d16afe65a360" />
-<img width="300" height="300" alt="스크린샷 2026-04-07 002858" src="https://github.com/user-attachments/assets/f080abf8-9333-4542-ab00-4eb18a35dc03" />
-<img width="300" height="300" alt="스크린샷 2026-04-07 004104" src="https://github.com/user-attachments/assets/da74d678-b4c1-4089-8190-2d939d9aff00" />
+<img width="310" height="310" alt="스크린샷 2026-04-07 002858" src="https://github.com/user-attachments/assets/f080abf8-9333-4542-ab00-4eb18a35dc03" />
+<img width="320" height="320" alt="스크린샷 2026-04-07 004104" src="https://github.com/user-attachments/assets/da74d678-b4c1-4089-8190-2d939d9aff00" />
 
 
 ## 서버
