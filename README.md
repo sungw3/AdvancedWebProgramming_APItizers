@@ -28,3 +28,6 @@ llm 호출에 따른 비용이 존재하므로 비용 최소화를 위해 아래
 ### 계획중인 최적화
 문자열 캐싱  
 마르코프체인을 감정에 적용하여 일부 문장에 대해 llm 호출 없이 처리
+
+구조
+<img width="640" height="1024" alt="image" src="https://github.com/user-attachments/assets/80ba359f-427d-4533-b862-81a3e29df6e3" />
