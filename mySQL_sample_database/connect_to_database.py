@@ -18,7 +18,7 @@ def connect_to_db():
             #INSERT/CREATE
             print("\n[CREATE] Creating new user 'sungwook7'...")
             insert_query = "INSERT INTO User (UserName, LoginID, LoginPW) VALUES (%s, %s, %s)"
-            cursor.execute(insert_query, ('sungwook7', 'sungwook7', 'hashed_pw_example'))
+            cursor.execute(insert_query, ('황성욱', 'sungwook7', 'password123'))
             connection.commit()
 
             #SELECT/READ
