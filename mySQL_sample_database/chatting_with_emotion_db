@@ -1,7 +1,7 @@
 
-CREATE DATABASE chatting_with_emotion_db DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;
+CREATE DATABASE chatting_with_emotion DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;
 
-USE chatting_with_emotion_db;
+USE chatting_with_emotion;
 
 CREATE TABLE User (
     UserID INT AUTO_INCREMENT PRIMARY KEY,
