@@ -1,8 +1,5 @@
 
-from collections import defaultdict
-
 #구현 복잡도를 낮추기 위해 해당 파일의 클래스들은 모두 정수 인덱스만을 처리합니다
-
 
 mood = 10
 
@@ -42,20 +39,20 @@ class GlobalMarcov:
 class UserMarcov:
     def __init__(self):
         self.n = mood
-        self.base = [[0 for _ in range(self.n)] for _ in range(self.n)]
+        self.base = [[[0 for _ in range(self.n)] for _ in range(self.n)] for _ in range(self.n)]
         
     def update(self,prev_mood:list[int],nxt_mood:int):
         #반드시 감정을 정수로 변환한 리스트를 사용할 것
         
         #정규화
-        a = ([0]*4 + prev_mood)[-2:] + [nxt_mood]
+        a = ([0]*2 + prev_mood)[-2:] + [nxt_mood]
         
         self.base[a[0]][a[1]][a[2]]+=1
         self.base[0][a[1]][a[2]]+=1
         self.base[0][0][a[2]]+=1
 
     def get(self,prev_mood:list[int])->list:
-        a = ([0]*4 + prev_mood)[-4:]
+        a = ([0]*2 + prev_mood)[-2:]
         return [
             self.base[a[0]][a[1]],
             self.base[0][a[1]],
