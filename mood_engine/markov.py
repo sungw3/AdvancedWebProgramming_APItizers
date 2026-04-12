@@ -6,6 +6,8 @@ mood = 10
 class GlobalMarcov:
     #전역 마르코프 체인
     
+    __slots__ = ['n','base']
+    
     def __init__(self):
         self.n = mood
         self.base = [[[[[0 for _ in range(self.n)] 
@@ -37,6 +39,9 @@ class GlobalMarcov:
     
 
 class UserMarcov:
+    
+    __slots__ = ['n','base']
+    
     def __init__(self):
         self.n = mood
         self.base = [[[0 for _ in range(self.n)] for _ in range(self.n)] for _ in range(self.n)]
