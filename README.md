@@ -11,7 +11,7 @@ django를 이용하여 챗 웹 구현하기 + llm을 이용한 채팅 감정 분
 ## 프론트
 - ux/ui design
 - handling user interactions
-- comunication with server
+- communication with server
 - dynamic update via server data
 
 ## 서버
