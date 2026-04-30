@@ -25,7 +25,10 @@ class PromptManager:
             base_url="https://api.deepseek.com"
         )
         self.mood_list = mood_list
-        self.model_id = "deepseek-chat" # 또는 "deepseek-v4-pro"
+        self.model_id = "deepseek-v4-pro"
+        
+        #deepseek-chat
+        #deepseek-v4-pro
         
         # 시스템 지침 설정 (OpenAI 방식은 config 대신 메시지 처음에 넣음)
         self.system_prompt = (
