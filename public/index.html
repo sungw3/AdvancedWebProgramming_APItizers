@@ -1,12 +1,51 @@
-
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bootstrap demo</title>
-  </head>
-  <body>
-    <h1>Hello, world!</h1>
-  </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatting with Emotion</title>
+    <!-- 추후 CSS file 연결-->
+    <style>
+        body { font-family: sans-serif; margin: 0; padding: 0; }
+        nav { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 20px 50px;
+            background: #eee;
+        }
+        .hero { 
+            height: 400px; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center; 
+            background: #f9f9f9; 
+            text-align: center;
+        }
+        .btn { padding: 10px 20px; text-decoration: none; background: #007bff; color: white; border-radius: 5px; }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Bar on the top -->
+    <nav>
+        <div class="menu-left">
+            <a href="rooms.html" style="margin-right: 20px;">room list</a>
+            <a href="about.html">look more</a>
+        </div>
+        <div class="menu-right">
+            <a href="login.html" class="btn">Sign In</a>
+        </div>
+    </nav>
+
+    <!-- main screen (Hero Section) -->
+    <section class="hero">
+        <h1>\Chatting with Emotion</h1>
+        <p>Find others with your emotions.</p>
+        <br>
+        <a href="login.html" class="btn" style="background: #28a745;">Let's begin</a>
+    </section>
+
+</body>
 </html>
