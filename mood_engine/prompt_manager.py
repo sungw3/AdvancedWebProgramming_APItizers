@@ -3,10 +3,13 @@ from pathlib import Path
 from dotenv import load_dotenv
 from openai import OpenAI  # google.genai 대신 openai 사용
 import json
+import mlist
 
 class PromptManager:
     
-    def __init__(self, mood_list: list):
+    def __init__(self):
+        
+        mood_list=mlist.get()
         
         # API key를 .env 파일에서 받아오는 코드
         current_dir = Path(__file__).resolve()
@@ -24,7 +27,7 @@ class PromptManager:
             api_key=api_key,
             base_url="https://api.deepseek.com"
         )
-        self.mood_list = mood_list
+        self.mood_list = mood_list if mood_list[0] is not None else mood_list[1:]
         self.model_id = "deepseek-v4-pro"
         
         #deepseek-chat
@@ -63,9 +66,8 @@ class PromptManager:
             return None
 
 if __name__ == '__main__':
-    test_mood = ['happy', 'sad', 'angry','None']
-    
-    pm = PromptManager(test_mood)
+
+    pm = PromptManager()
     
     # 실행 결과 확인
     print(pm.query(['angry', 'angry', 'angry'], "하아"))

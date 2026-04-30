@@ -1,23 +1,30 @@
+import mlist
 
-#구현 복잡도를 낮추기 위해 해당 파일의 클래스들은 모두 정수 인덱스만을 처리합니다
-
-mood = 10
 
 class GlobalMarcov:
     #전역 마르코프 체인
+    __slots__ = ['base']
     
-    __slots__ = ['n','base']
+    mood_list = mlist.get()
+    n = len(mood_list)
+    conv_dt = {v:i for i,v in enumerate(mood_list)}
     
     def __init__(self):
-        self.n = mood
-        self.base = [[[[[0 for _ in range(self.n)] 
-            for _ in range(self.n)] 
-           for _ in range(self.n)] 
-          for _ in range(self.n)] 
-         for _ in range(self.n)]
+        n = GlobalMarcov.n
+        self.base = [[[[[0 for _ in range(n)] 
+            for _ in range(n)] 
+           for _ in range(n)] 
+          for _ in range(n)] 
+         for _ in range(n)]
         
-    def update(self,prev_mood:list[int],nxt_mood:int):
-        #반드시 감정을 정수로 변환한 리스트를 사용할 것
+    
+    def conv(self,moods:list)->list:
+        #문자열 감정 리스트를 인덱스로 바꿔주는 메서드
+        return [GlobalMarcov.conv_dt[i] for i in moods]
+        
+    def update(self,prev_mood:list[str],nxt_mood:str):
+        prev_mood = self.conv(prev_mood)
+        nxt_mood = GlobalMarcov.conv_dt[nxt_mood]
         
         #정규화
         a = ([0]*4 + prev_mood)[-4:] + [nxt_mood]
@@ -28,7 +35,9 @@ class GlobalMarcov:
         self.base[0][0][0][a[3]][a[4]]+=1
 
 
-    def get(self,prev_mood:list[int])->list:
+    def get(self,prev_mood:list[str])->list:
+        prev_mood = self.conv(prev_mood)
+        
         a = ([0]*4 + prev_mood)[-4:]
         return [
             self.base[a[0]][a[1]][a[2]][a[3]],
@@ -39,15 +48,28 @@ class GlobalMarcov:
     
 
 class UserMarcov:
+    __slots__ = ['base']
     
-    __slots__ = ['n','base']
+    mood_list = mlist.get()
+    n = len(mood_list)
+    conv_dt = {v:i for i,v in enumerate(mood_list)}
+    
     
     def __init__(self):
-        self.n = mood
-        self.base = [[[0 for _ in range(self.n)] for _ in range(self.n)] for _ in range(self.n)]
-        
-    def update(self,prev_mood:list[int],nxt_mood:int):
-        #반드시 감정을 정수로 변환한 리스트를 사용할 것
+        n = UserMarcov.n
+        self.base = [[[0 for _ in range(n)] 
+                      for _ in range(n)] 
+                     for _ in range(n)]
+    
+    
+    def conv(self,moods:list)->list:
+        #문자열 감정 리스트를 인덱스로 바꿔주는 메서드
+        return [UserMarcov.conv_dt[i] for i in moods]
+    
+    
+    def update(self,prev_mood:list[str],nxt_mood:str):
+        prev_mood = self.conv(prev_mood)
+        nxt_mood = UserMarcov.conv_dt[nxt_mood]
         
         #정규화
         a = ([0]*2 + prev_mood)[-2:] + [nxt_mood]
@@ -56,7 +78,9 @@ class UserMarcov:
         self.base[0][a[1]][a[2]]+=1
         self.base[0][0][a[2]]+=1
 
-    def get(self,prev_mood:list[int])->list:
+    def get(self,prev_mood:list[str])->list:
+        prev_mood = self.conv(prev_mood)
+        
         a = ([0]*2 + prev_mood)[-2:]
         return [
             self.base[a[0]][a[1]],
