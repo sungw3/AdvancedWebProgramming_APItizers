@@ -1,63 +1,68 @@
 import os
 from pathlib import Path
 from dotenv import load_dotenv
-from google import genai
-from google.genai import types
+from openai import OpenAI  # google.genai 대신 openai 사용
 import json
 
 class PromptManager:
     
-    def __init__(self,mood_list:list):
+    def __init__(self, mood_list: list):
         
-        #api key를 .env 파일에서 받아오는 코드
+        # API key를 .env 파일에서 받아오는 코드
         current_dir = Path(__file__).resolve()
         env_path = current_dir.parent.parent / ".env"
         load_dotenv(dotenv_path=env_path)
 
-        api_key = os.getenv("GEMINI_API_KEY")
+
+        api_key = os.getenv("DEEPSEEK_API_KEY")
 
         if not api_key:
-            raise ValueError("API KEY ERROR: 환경 변수 'GEMINI_API_KEY'가 설정되지 않았습니다. .env 파일을 확인하세요.")
+            raise ValueError("API KEY ERROR: 환경 변수 'DEEPSEEK_API_KEY'가 설정되지 않았습니다.")
         
-        
-        self.client = genai.Client(api_key=api_key)
-        self.mood_list = mood_list
-        self.model_id = "gemini-1.5-flash"
-        
-        self.config = types.GenerateContentConfig(
-            system_instruction=f"분석가로서 사용자의 현재 감정을 다음 목록 중 하나로만 선택하세요: {', '.join(self.mood_list)}",
-            temperature=0.0,  # 가장 확률이 높은 단 하나를 선택하도록 0으로 설정
-            # 출력 형식을 JSON으로 고정하고, 필드를 제한함
-            response_mime_type="application/json",
-            response_schema={
-                "type": "object",
-                "properties": {
-                    "mood": {
-                        "type": "string", 
-                        "enum": self.mood_list  # 이 리스트 안에서만 대답하도록 강제
-                    }
-                },
-                "required": ["mood"]
-            }
+        # DeepSeek 클라이언트 설정
+        self.client = OpenAI(
+            api_key=api_key,
+            base_url="https://api.deepseek.com"
         )
+        self.mood_list = mood_list
+        self.model_id = "deepseek-chat" # 또는 "deepseek-v4-pro"
         
+        # 시스템 지침 설정 (OpenAI 방식은 config 대신 메시지 처음에 넣음)
+        self.system_prompt = (
+            f"당신은 채팅 맥락 분석가입니다. 사용자의 감정 상태를 {', '.join(self.mood_list)} 중 하나로 분류하세요.\n"
+            "주의: 이전 감정 이력의 흐름을 고려하여 현재 메시지에서 느껴지는 변화를 포착하세요.\n"
+            "응답은 반드시 JSON 형식이어야 합니다: {\"mood\": \"감정\"}"
+        )
 
-
-    def query(self,mood_history:list,message:str):
+    def query(self, mood_history: list, message: str):
         # 프롬프트 구성
         prompt = f"이전 감정 이력: {mood_history}\n현재 사용자 메시지: {message}"
-        
+             
         try:
-            response = self.client.models.generate_content(
+            # DeepSeek 호출
+            response = self.client.chat.completions.create(
                 model=self.model_id,
-                contents=prompt,
-                config=self.config
+                messages=[
+                    {"role": "system", "content": self.system_prompt},
+                    {"role": "user", "content": prompt}
+                ],
+                temperature=0.0,
+                # JSON 모드 활성화 (DeepSeek에서 지원)
+                response_format={'type': 'json_object'}
             )
             
             # JSON 파싱 및 결과 추출
-            result = json.loads(response.text)
+            result = json.loads(response.choices[0].message.content)
             return result.get("mood", None)
             
         except Exception as e:
-            print(f"Gemini Query Error: {e}")
+            print(f"DeepSeek Query Error: {e}")
             return None
+
+if __name__ == '__main__':
+    test_mood = ['happy', 'sad', 'angry','None']
+    
+    pm = PromptManager(test_mood)
+    
+    # 실행 결과 확인
+    print(pm.query(['angry', 'angry', 'angry'], "하아"))
