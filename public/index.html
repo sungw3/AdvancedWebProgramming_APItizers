@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chatting with Emotion</title>
-    <!-- 추후 CSS file 연결-->
+
     <style>
         body { font-family: sans-serif; margin: 0; padding: 0; }
         nav { 
@@ -15,7 +15,7 @@
             background: #eee;
         }
         .hero { 
-            height: 400px; 
+            min-height: calc(100vh - 74px);
             display: flex; 
             flex-direction: column; 
             justify-content: center; 
@@ -31,8 +31,8 @@
     <!-- Navigation Bar on the top -->
     <nav>
         <div class="menu-left">
-            <a href="rooms.html" style="margin-right: 20px;">room list</a>
-            <a href="about.html">look more</a>
+            <a href="rooms.html" style="margin-right: 20px;">Browse Rooms</a>
+            <a href="about.html">Getting Started</a>
         </div>
         <div class="menu-right">
             <a href="login.html" class="btn">Sign In</a>
