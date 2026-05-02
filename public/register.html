@@ -1,1 +1,76 @@
-register page..
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Chatting with emotion</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .register-card {
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body class="bg-light vh-100 d-flex align-items-center justify-content-center">
+
+    <div class="card shadow-sm register-card">
+        <div class="card-body">
+            <h3 class="card-title text-center mb-4">Create Account</h3>
+            
+            <form class="needs-validation" action="login.html" novalidate>
+                <div class="mb-3">
+                    <label for="newId" class="form-label">ID</label>
+                    <input type="text" class="form-control" id="newId" placeholder="Choose your ID" required>
+                    <div class="invalid-feedback text-start">
+                        Please choose an ID.
+                    </div>
+                </div>
+              
+                <div class="mb-3">
+                    <label for="newPw" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="newPw" placeholder="Create a password" required>
+                    <div class="invalid-feedback text-start">
+                        Please enter a password.
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="confirmPw" class="form-label">Confirm Password</label>
+                    <input type="password" class="form-control" id="confirmPw" placeholder="Repeat your password" required>
+                    <div class="invalid-feedback text-start">
+                        Please confirm your password.
+                    </div>
+                </div>
+
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-success">Sign Up</button>
+                </div>
+            </form>
+            
+            <div class="text-center mt-4">
+                <span class="small text-muted">Already have an account?</span>
+                <a href="login.html" class="text-decoration-none small">Sign In</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        (function () {
+            'use strict'
+            const forms = document.querySelectorAll('.needs-validation')
+            Array.from(forms).forEach(form => {
+                form.addEventListener('submit', event => {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+                    form.classList.add('was-validated')
+                }, false)
+            })
+        })()
+    </script>
+</body>
+</html>
