@@ -50,20 +50,85 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        (function () {
-            'use strict'
-            const forms = document.querySelectorAll('.needs-validation')
-            Array.from(forms).forEach(form => {
-                form.addEventListener('submit', event => {
-                    if (!form.checkValidity()) {
-                        event.preventDefault()
-                        event.stopPropagation()
-                    }
-                    form.classList.add('was-validated')
-                }, false)
-            })
-        })()
+        const loginForm = document.querySelector('.needs-validation');
+        
+        loginForm.addEventListener('submit', function(event) {
+            
+            // if login form is not valid, stop.
+            if (!loginForm.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+                loginForm.classList.add('was-validated');
+                return;
+            }
+
+            // if login form is valid, next step.
+            event.preventDefault();
+            
+            // get the entered ID value. (for demo purposes, we are not validating the password or checking against a database)
+            const enteredId = document.getElementById('userId').value;
+
+            // memo the login state and user name in localStorage (for demo purposes, we are not implementing actual authentication)
+            localStorage.setItem('isLoggedIn', 'true');
+            localStorage.setItem('userName', enteredId);
+
+            // redirect to the room list page after successful login
+            window.location.href = 'room-list.html'; 
+        });
     </script>
+
+
+<!--
+    <script>
+        const loginForm = document.querySelector('.needs-validation');
+        
+        loginForm.addEventListener('submit', async function(event) {
+            event.preventDefault(); 
+            
+            if (!loginForm.checkValidity()) {
+                event.stopPropagation();
+                loginForm.classList.add('was-validated');
+                return;
+            }
+
+            const enteredId = document.getElementById('userId').value;
+            const enteredPw = document.getElementById('userPw').value;
+
+            try {
+                // sending to server for login verification
+                const response = await fetch('https://server/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ id: enteredId, password: enteredPw }) 
+                });
+
+                if (response.ok) {
+                    // login successful
+                    const data = await response.json();
+                    
+                    // memo the login state and access token in localStorage
+                    localStorage.setItem('accessToken', data.token);
+                    localStorage.setItem('userName', data.userName); 
+                    
+                    // redirect to the room list page after successful login
+                    window.location.href = 'room-list.html';
+                    
+                } else {
+                    // login failed (wrong password or non-existent ID)
+                    alert('Wrong ID or password.');
+                    document.getElementById('userPw').value = ''; // clear password field
+                }
+                
+            } catch (error) {
+                // in case of network error or server issues
+                console.error('Error:', error);
+                alert('Server is not reachable. Please try again later.');
+            }
+        });
+    </script>
+-->
 
 </body>
 </html>
