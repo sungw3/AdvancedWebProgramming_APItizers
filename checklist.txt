@@ -1,2 +1,3 @@
-- mobile ui fix
-- login function javascript for backend
+- design
+- chatting room web socket
+- 
