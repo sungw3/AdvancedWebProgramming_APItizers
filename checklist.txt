@@ -1,3 +1,4 @@
 - design
 - chatting room web socket
-- 
+- make darkmode if ui is too bright
+- chatting room mobile ui
