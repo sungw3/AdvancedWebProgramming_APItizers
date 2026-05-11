@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 from dotenv import load_dotenv
-from openai import OpenAI  # google.genai 대신 openai 사용
+from openai import AsyncOpenAI  # 비동기 클라이언트 사용
 import json
 import mlist
 
@@ -22,38 +22,34 @@ class PromptManager:
         if not api_key:
             raise ValueError("API KEY ERROR: 환경 변수 'DEEPSEEK_API_KEY'가 설정되지 않았습니다.")
         
-        # DeepSeek 클라이언트 설정
-        self.client = OpenAI(
+        # DeepSeek 비동기 클라이언트 설정
+        self.client = AsyncOpenAI(
             api_key=api_key,
             base_url="https://api.deepseek.com"
         )
         self.mood_list = mood_list if mood_list[0] is not None else mood_list[1:]
         self.model_id = "deepseek-v4-pro"
         
-        #deepseek-chat
-        #deepseek-v4-pro
-        
-        # 시스템 지침 설정 (OpenAI 방식은 config 대신 메시지 처음에 넣음)
+        # System Instruction
         self.system_prompt = (
-            f"당신은 채팅 맥락 분석가입니다. 사용자의 감정 상태를 {', '.join(self.mood_list)} 중 하나로 분류하세요.\n"
-            "주의: 이전 감정 이력의 흐름을 고려하여 현재 메시지에서 느껴지는 변화를 포착하세요.\n"
-            "응답은 반드시 JSON 형식이어야 합니다: {\"mood\": \"감정\"}"
+            f"You are a chat context analyst. Classify the user's emotional state into exactly one of the following: {', '.join(self.mood_list)}.\n"
+            "Note: Analyze the flow of the provided emotional history and capture any emotional shifts or changes reflected in the current message.\n"
+            "Your response must be in valid JSON format: {\"mood\": \"selected_mood\"}"
         )
 
-    def query(self, mood_history: list, message: str):
-        # 프롬프트 구성
-        prompt = f"이전 감정 이력: {mood_history}\n현재 사용자 메시지: {message}"
+    async def query(self, mood_history: list, message: str):
+        # Prompt Construction
+        prompt = f"Emotional history: {mood_history}\nCurrent user message: {message}"
              
         try:
-            # DeepSeek 호출
-            response = self.client.chat.completions.create(
+            # DeepSeek 비동기 호출
+            response = await self.client.chat.completions.create(
                 model=self.model_id,
                 messages=[
                     {"role": "system", "content": self.system_prompt},
                     {"role": "user", "content": prompt}
                 ],
                 temperature=0.0,
-                # JSON 모드 활성화 (DeepSeek에서 지원)
                 response_format={'type': 'json_object'}
             )
             
@@ -62,12 +58,25 @@ class PromptManager:
             return result.get("mood", None)
             
         except Exception as e:
-            print(f"DeepSeek Query Error: {e}")
+            print(f"DeepSeek Async Query Error: {e}")
             return None
 
 if __name__ == '__main__':
+    import asyncio
+    import time
 
-    pm = PromptManager()
-    
-    # 실행 결과 확인
-    print(pm.query(['happy', 'happy', 'happy'], ""))
+    async def main():
+        pm = PromptManager()
+        
+        # 지연 시간 측정 시작
+        start_time = time.perf_counter()
+        
+        # 실행 결과 확인 (mlist의 대소문자 기준인 'Happy' 사용)
+        result = await pm.query(['Happy', 'Happy', 'Happy'], "The weather is so beautiful today, I feel amazing!")
+        
+        end_time = time.perf_counter()
+        
+        print(f"Analysis Result: {result}")
+        print(f"Latency: {end_time - start_time:.4f} seconds")
+
+    asyncio.run(main())
