@@ -70,4 +70,4 @@ if __name__ == '__main__':
     pm = PromptManager()
     
     # 실행 결과 확인
-    print(pm.query(['angry', 'angry', 'angry'], "하아"))
+    print(pm.query(['happy', 'happy', 'happy'], ""))

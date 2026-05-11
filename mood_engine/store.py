@@ -6,7 +6,7 @@ class DatabaseManager:
     db_path = "marcov_storage.db"
     
     def __init__(self):
-        self.conn = sqlite3.connect(self.db_path, check_same_thread=False)
+        self.conn = sqlite3.connect(DatabaseManager.db_path, check_same_thread=False)
         self.cursor = self.conn.cursor()
         self._create_tables()
     
