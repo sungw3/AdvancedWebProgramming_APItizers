@@ -48,7 +48,18 @@ class DatabaseManager:
             (user_id, room_id)
         )
         row = self.cursor.fetchone()
-        return pickle.loads(row[0]) if row else markov.UserMarcov()
+        if not row:
+            return markov.UserMarcov()
+            
+        obj = pickle.loads(row[0])
+        
+        # 하위 호환성 체크: 새 필드(history, llm_counter)가 없는 경우 초기화
+        if not hasattr(obj, 'history'):
+            obj.history = []
+        if not hasattr(obj, 'llm_counter'):
+            obj.llm_counter = 0
+            
+        return obj
 
     def save_global(self, global_obj):
         """시스템 글로벌 객체를 저장합니다."""

@@ -1,4 +1,5 @@
 import mlist
+from collections import deque
 
 
 class GlobalMarcov:
@@ -33,6 +34,7 @@ class GlobalMarcov:
         self.base[0][a[1]][a[2]][a[3]][a[4]]+=1
         self.base[0][0][a[2]][a[3]][a[4]]+=1
         self.base[0][0][0][a[3]][a[4]]+=1
+        self.base[0][0][0][0][a[4]]+=1
 
 
     def get(self,prev_mood:list[str])->list:
@@ -43,12 +45,13 @@ class GlobalMarcov:
             self.base[a[0]][a[1]][a[2]][a[3]],
             self.base[0][a[1]][a[2]][a[3]],
             self.base[0][0][a[2]][a[3]],
-            self.base[0][0][0][a[3]]
+            self.base[0][0][0][a[3]],
+            self.base[0][0][0][0]
             ]
     
 
 class UserMarcov:
-    __slots__ = ['base']
+    __slots__ = ['base', 'history', 'llm_counter']
     
     mood_list = mlist.get()
     n = len(mood_list)
@@ -60,6 +63,8 @@ class UserMarcov:
         self.base = [[[0 for _ in range(n)] 
                       for _ in range(n)] 
                      for _ in range(n)]
+        self.history = []
+        self.llm_counter = 0
     
     
     def conv(self,moods:list)->list:
@@ -85,6 +90,7 @@ class UserMarcov:
         return [
             self.base[a[0]][a[1]],
             self.base[0][a[1]],
+            self.base[0][0],
             ]
 
 
