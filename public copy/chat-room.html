@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatting Room - Chatting with Emotion</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    
+    <!-- note.
+        - server communication required
+        - ui improvements required (for different devices)
+    -->
+
+    <link rel="stylesheet" href="mcolor.css">
+
+    <style>
+        /*  */
+        body { margin: 0; overflow: hidden; background-color: #f8f9fa; }
+        
+        
+        .chat-wrapper { 
+            height: 100vh; 
+            display: flex; 
+        }
+
+        /* sidebar that shows user list and status (sidebar is only displayed on desktop) */
+        .user-sidebar {
+            width: 280px;
+            background-color: #ffffff;
+            border-right: 1px solid #dee2e6;
+            overflow-y: auto;
+        }
+
+        /* user status dots for online/offline status (green color and gray color) */
+        .status-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 8px; }
+        .online-dot { background-color: #28a745; }
+        .offline-dot { background-color: #adb5bd; }
+        
+        /* text that shows the last online status */
+        .last-seen { font-size: 0.8rem; color: #6c757d; margin-left: auto; }
+
+ 
+        .chat-main {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: #f1f3f5;
+        }
+
+
+        .chat-header {
+            padding: 15px 20px;
+            background-color: #ffffff;
+            border-bottom: 1px solid #dee2e6;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-messages {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        /* Style of "default" text bubble */
+        .message-row { display: flex; width: 100%; }
+        .message-row.me { justify-content: flex-end; }
+        .message-row.other { justify-content: flex-start; }
+
+
+        /* display "sender's name" above the message */
+        .sender-name { font-size: 0.8rem; color: #495057; margin-bottom: 4px; display: block; }
+
+        .bubble {
+            max-width: 70%;
+            padding: 10px 15px;
+            border-radius: 18px;
+            position: relative;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .message-row.me .bubble { border-bottom-right-radius: 4px; }
+
+        .message-row.other .bubble { border-bottom-left-radius: 4px; }
+
+
+
+        .chat-input-area {
+            padding: 15px 20px;
+            background-color: #ffffff;
+            border-top: 1px solid #dee2e6;
+        }
+
+        /* hide sidebar on mobile! */
+        @media (max-width: 768px) {
+            .user-sidebar { display: none; }
+        }
+    </style>
+</head>
+
+
+<body>
+
+    <div class="chat-wrapper pt-0 mt-0">
+        
+        <aside class="user-sidebar p-3 d-none d-md-block">
+
+            <div class="mb-4 border-bottom pb-3">
+                <a href="index.html" class="text-decoration-none text-dark">
+                    <h5 class="fw-bold mb-0" style="letter-spacing: -0.5px;">Chatting with Emotion</h5>
+                </a>
+            </div>
+
+            <h6 class="fw-bold mb-3 text-secondary">Members 4</h6>
+            
+            <div class="mb-4">
+                <small class="text-uppercase fw-bold text-muted d-block mb-2">Online</small>
+                <div class="d-flex align-items-center mb-2">
+                    <span class="status-dot online-dot"></span> <span class="fw-bold">My_Nickname (Me)</span>
+                </div>
+                <div class="d-flex align-items-center mb-2">
+                    <span class="status-dot online-dot"></span> <span>user_ex1</span>
+                </div>
+            </div>
+
+            <div>
+                <small class="text-uppercase fw-bold text-muted d-block mb-2">Offline</small>
+                <div class="d-flex align-items-center mb-2">
+                    <span class="status-dot offline-dot"></span> <span class="text-muted">user_ex2</span>
+                    <span class="last-seen">5m ago</span>
+                </div>
+                <div class="d-flex align-items-center mb-2">
+                    <span class="status-dot offline-dot"></span> <span class="text-muted">user_ex3</span>
+                    <span class="last-seen">2h ago</span>
+                </div>
+            </div>
+        </aside>
+
+        <main class="chat-main">
+            <div class="chat-header">
+                <div>
+                    <h5 id="room-title" class="mb-0 fw-bold">(Room Name here)</h5>
+                    <small class="text-muted">(subtitle here)</small>
+                </div>
+                
+                <button class="btn btn-light d-md-none border" type="button" data-bs-toggle="offcanvas" data-bs-target="#userListOffcanvas">
+                    <i class="bi bi-people-fill"></i>
+                </button>
+            </div>
+
+            <div class="chat-messages" id="chatContainer">
+                
+                <div class="message-row other">
+                    <div>
+                        <span class="sender-name">user_ex1</span>
+                        <div class="bubble emotion_happy">
+                            모기를 드디어 잡았어! 너무 행복해
+                        </div>
+                    </div>
+                </div>
+
+                <div class="message-row other">
+                    <div>
+                        <span class="sender-name">user_ex1</span>
+                        <div class="bubble emotion_disgust">
+                            모기 너무 끔찍해.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="message-row other">
+                    <div>
+                        <span class="sender-name">user_ex1</span>
+                        <div class="bubble emotion_fear">
+                            말라리아 걸리면 어떡하지...
+                        </div>
+                    </div>
+                </div>
+
+                <div class="message-row other">
+                    <div>
+                        <span class="sender-name">user_ex3</span>
+                        <div class="bubble emotion_angry">
+                            아니, 과제 왜 이렇게 많아? 화가 난다.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="message-row other">
+                    <div>
+                        <span class="sender-name">user_ex2</span>
+                        <div class="bubble emotion_neutral">
+                            일단 진정하고, 같이 도서관 갈래?
+                        </div>
+                    </div>
+                </div>
+
+                <div class="message-row other">
+                    <div>
+                        <span class="sender-name">user_ex3</span>
+                        <div class="bubble emotion_sad">
+                            아니.. 팀플 때문에 모여야해 ㅠㅠ
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="message-row me">
+                    <div class="bubble emotion_sad">
+                        아이고.. 화이팅하자 ㅠ
+                    </div>
+                </div>
+
+
+
+            </div>
+
+            <div class="chat-input-area">
+                <form id="chatForm" class="d-flex gap-2">
+                    <input type="text" id="messageInput" class="form-control rounded-pill px-4" placeholder="Type a message..." autocomplete="off">
+                    <button type="submit" class="btn btn-primary rounded-pill px-4">
+                        <i class="bi bi-send-fill"></i> Send
+                    </button>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="userListOffcanvas">
+        <div class="offcanvas-header border-bottom">
+            <a href="index.html" class="text-decoration-none text-dark">
+                <h5 class="offcanvas-title fw-bold">Chatting with Emotion</h5>
+            </a>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div class="mb-4">
+                <h5 class="offcanvas-title fw-bold mb-3">Participants 4</h5>
+                <small class="text-uppercase fw-bold text-muted d-block mb-2">Online</small>
+                <div class="d-flex align-items-center mb-2">
+                    <span class="status-dot online-dot"></span> <span class="fw-bold">My_Nickname (Me)</span>
+                </div>
+                <div class="d-flex align-items-center mb-2">
+                    <span class="status-dot online-dot"></span> <span>user_ex1</span>
+                </div>
+            </div>
+
+            <div>
+                <small class="text-uppercase fw-bold text-muted d-block mb-2">Offline</small>
+                <div class="d-flex align-items-center mb-2">
+                    <span class="status-dot offline-dot"></span> <span class="text-muted">user_ex2</span>
+                    <span class="last-seen">5m ago</span>
+                </div>
+                <div class="d-flex align-items-center mb-2">
+                    <span class="status-dot offline-dot"></span> <span class="text-muted">user_ex3</span>
+                    <span class="last-seen">2h ago</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="api.js"></script>
+    <script>
+        // only logged in users can access the chat room.
+        if (localStorage.getItem('isLoggedIn') !== 'true') {
+            alert("Please log in first!");
+            window.location.href = 'login.html';
+        }
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const roomTitle = urlParams.get('title');
+
+
+        if (roomTitle) {
+            // change the room title of the room
+            document.querySelector('#room-title').innerText = roomTitle;
+        }
+
+
+        // handle chat form submission and add new message to the chat container
+        const chatForm = document.getElementById('chatForm');
+        const messageInput = document.getElementById('messageInput');
+        const chatContainer = document.getElementById('chatContainer');
+
+        // scroll should be at the bottom when the page loads.
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+
+        chatForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const text = messageInput.value.trim();
+            if(!text) return;
+
+            // send the message text to server
+            // get the corresponding color.
+            const newMessage = `
+                <div class="message-row me">
+                    <div class="bubble emotion_surprise">
+                        ${text}
+                    </div>
+                </div>
+            `;
+            
+            chatContainer.insertAdjacentHTML('beforeend', newMessage);
+            messageInput.value = '';
+            
+            // scroll down after adding new message.
+            chatContainer.scrollTo({
+                top: chatContainer.scrollHeight,
+                behavior: 'smooth'
+            });
+        });
+    </script>
+</body>
+</html>
