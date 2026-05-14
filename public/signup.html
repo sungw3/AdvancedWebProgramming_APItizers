@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,44 +12,76 @@
             max-width: 400px;
             padding: 20px;
         }
+
+        .input-hint {
+            font-size: 0.8rem;
+            color: #6c757d;
+            display: none;
+            margin-top: 4px;
+            margin-left: 4px;
+        }
+
+        .form-control:focus + .input-hint {
+            display: block;
+        }
+
+        @media (max-width: 576px) {
+            .register-card {
+                margin: 20px;
+                max-width: 100%;
+            }
+        }
     </style>
 </head>
-<body class="bg-light vh-100 d-flex align-items-center justify-content-center">
+
+<body class="bg-light min-vh-100 d-flex align-items-center justify-content-center">
 
     <div class="card shadow-sm register-card">
         <div class="card-body">
             <h3 class="card-title text-center mb-4">Create Account</h3>
-            
-            <form class="needs-validation" action="login.html" novalidate>
+
+            <form id="signupForm" class="needs-validation" novalidate>
                 <div class="mb-3">
-                    <label for="newId" class="form-label">ID</label>
-                    <input type="text" class="form-control" id="newId" placeholder="Choose your ID" required>
-                    <div class="invalid-feedback text-start">
+                    <label for="newNick" class="form-label fw-bold">Nickname</label>
+                    <input type="text" class="form-control" id="newNick" required>
+                    <div class="input-hint">Nick name shows to your friends</div>
+                    <div class="invalid-feedback">
+                        Please choose a Nickname.
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="newId" class="form-label fw-bold">ID</label>
+                    <input type="text" class="form-control" id="newId" required>
+                    <div class="input-hint">This will be your unique login ID.</div>
+                    <div class="invalid-feedback">
                         Please choose an ID.
                     </div>
                 </div>
-              
+
                 <div class="mb-3">
-                    <label for="newPw" class="form-label">Password</label>
-                    <input type="password" class="form-control" id="newPw" placeholder="Create a password" required>
-                    <div class="invalid-feedback text-start">
+                    <label for="newPw" class="form-label fw-bold">Password</label>
+                    <input type="password" class="form-control" id="newPw" required minlength="4">
+                    <div class="input-hint">Enter at least 4 characters.</div>
+                    <div class="invalid-feedback">
                         Please enter a password.
                     </div>
                 </div>
 
                 <div class="mb-3">
-                    <label for="confirmPw" class="form-label">Confirm Password</label>
-                    <input type="password" class="form-control" id="confirmPw" placeholder="Repeat your password" required>
-                    <div class="invalid-feedback text-start">
+                    <label for="confirmPw" class="form-label fw-bold">Confirm Password</label>
+                    <input type="password" class="form-control" id="confirmPw" required>
+                    <div class="input-hint">Please re-enter your password to confirm.</div>
+                    <div class="invalid-feedback">
                         Please confirm your password.
                     </div>
                 </div>
 
-                <div class="d-grid gap-2">
-                    <button type="submit" class="btn btn-success">Sign Up</button>
+                <div class="d-grid gap-2 mt-4">
+                    <button type="submit" class="btn btn-success btn-lg">Sign Up</button>
                 </div>
             </form>
-            
+
             <div class="text-center mt-4">
                 <span class="small text-muted">Already have an account?</span>
                 <a href="login.html" class="text-decoration-none small">Log In</a>
@@ -57,25 +90,24 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="api.js"></script>
     <script>
-        const signupForm = document.querySelector('.needs-validation');
+        const signupForm = document.getElementById('signupForm');
 
-        signupForm.addEventListener('submit', async function(event) {
+        signupForm.addEventListener('submit', async function (event) {
             event.preventDefault();
 
-            // check the form validity
             if (!signupForm.checkValidity()) {
                 event.stopPropagation();
                 signupForm.classList.add('was-validated');
                 return;
             }
 
-            // entered values retrieval
+            const newNick = document.getElementById('newNick').value;
             const newId = document.getElementById('newId').value;
             const newPw = document.getElementById('newPw').value;
             const confirmPw = document.getElementById('confirmPw').value;
 
-            // confirm password match
             if (newPw !== confirmPw) {
                 alert('Passwords do not match. Please try again.');
                 document.getElementById('confirmPw').focus();
@@ -83,27 +115,17 @@
             }
 
             try {
-                /* server connection logic
-                const response = await fetch('https://server/api/signup', {
+
+                const data = await fetchAPI('/signup', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        id: newId, 
-                        password: newPw 
+                    body: JSON.stringify({
+                        nickname: newNick,
+                        id: newId,
+                        password: newPw
                     })
                 });
 
-                if (response.ok) {
-                    alert('Signup successful! Please login.');
-                    window.location.href = 'login.html';
-                } else {
-                    const errorData = await response.json();
-                    alert('Signup failed: ' + (errorData.message || 'Please try again.'));
-                }
-                */
-
-                // temporary code
-                console.log('Signup attempt:', { id: newId, password: newPw });
+                console.log('Signup attempt:', { id: newId, nickname: newNick });
                 alert('Signup successful! Please login.');
                 window.location.href = 'login.html';
 
@@ -114,4 +136,5 @@
         });
     </script>
 </body>
+
 </html>
