@@ -13,6 +13,7 @@ django를 이용하여 챗 웹 구현하기 + llm을 이용한 채팅 감정 분
   - Currently, front/backend separated for development & test.
   - Later, frontend integrate into Django server. 
 
+
   > All HTML files moves to -> Django templates/ directory
 
   > All JS, CSS, PNG (static files) moves to -> Django static/ directory
