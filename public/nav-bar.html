@@ -1,0 +1,53 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom sticky-top">
+
+    <div class="container-fluid px-4">
+        <a class="navbar-brand fw-bold" href="index.html">Chatting with Emotion</a>
+
+        <button class="navbar-toggler custom-menu-btn" type="button" data-bs-toggle="offcanvas"
+            data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+            Menu
+        </button>
+
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title fw-bold" id="offcanvasNavbarLabel">Menu</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+
+            <div class="offcanvas-body">
+                <ul class="navbar-nav justify-content-start flex-grow-1 pe-3">
+                    <li class="nav-item">
+                        <a class="nav-link" href="search-room.html">Browse Rooms</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="create-room.html">Host Room</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="about.html">Getting Started</a>
+                    </li>
+                </ul>
+
+                <div class="d-flex align-items-center mt-3 mt-lg-0">
+                    <div id="login-section">
+                        <a href="login.html" class="btn btn-primary w-100">Log In</a>
+                    </div>
+
+                    <div id="user-section" style="display: none;">
+                        <div class="dropdown">
+                            <button class="btn btn-outline-secondary dropdown-toggle btn-sm w-100" type="button"
+                                id="userMenu" data-bs-toggle="dropdown" aria-expanded="false">
+                                <span id="user-nickname">Welcome!</span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu">
+                                <li><a class="dropdown-item text-danger" href="#" id="logout-btn">Log Out</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+</nav>
