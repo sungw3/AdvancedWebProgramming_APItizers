@@ -1,7 +1,4 @@
-if (!localStorage.getItem('accessToken')) {
-    alert('Please log in first.');
-    window.location.replace('login.html');
-}
+
 
 function showToast(message, type = 'success') {
     const toastEl = document.getElementById('appToast');
