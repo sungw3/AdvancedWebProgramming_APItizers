@@ -1,4 +1,8 @@
-
+const token = localStorage.getItem('accessToken');
+if (!token) {
+    alert("Please log in first!");
+    window.location.replace('login.html');
+}
 
 const urlParams = new URLSearchParams(window.location.search);
 const roomId = urlParams.get('roomId');
@@ -13,8 +17,8 @@ function showToast(message, type = 'success') {
     const toastEl = document.getElementById('appToast');
     const toastMessage = document.getElementById('toastMessage');
     toastMessage.innerText = message;
-    toastEl.className = type === 'error' 
-        ? 'toast align-items-center text-bg-danger border-0' 
+    toastEl.className = type === 'error'
+        ? 'toast align-items-center text-bg-danger border-0'
         : 'toast align-items-center text-bg-success border-0';
     const toast = new bootstrap.Toast(toastEl, { delay: 3000 });
     toast.show();
@@ -22,96 +26,141 @@ function showToast(message, type = 'success') {
 
 function escapeHTML(str) {
     if (!str) return '';
-    return String(str).replace(/[&<>'"]/g, function(tag) {
+    return String(str).replace(/[&<>'"]/g, function (tag) {
         const charsToReplace = { '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' };
         return charsToReplace[tag] || tag;
     });
 }
 
+function timeSince(dateString) {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    const seconds = Math.floor((new Date() - date) / 1000);
+
+    let interval = seconds / 31536000;
+    if (interval > 1) return Math.floor(interval) + "year ago";
+    interval = seconds / 2592000;
+    if (interval > 1) return Math.floor(interval) + "month ago";
+    interval = seconds / 86400;
+    if (interval > 1) return Math.floor(interval) + "day ago";
+    interval = seconds / 3600;
+    if (interval > 1) return Math.floor(interval) + "hour ago";
+    interval = seconds / 60;
+    if (interval > 1) return Math.floor(interval) + "minute ago";
+    return "just now";
+}
 
 if (roomTitle) {
     document.getElementById('room-title').innerText = escapeHTML(roomTitle);
 }
-const myName = localStorage.getItem('userName') || 'Me';
-const mySidebarName = document.getElementById('my-sidebar-name');
-if (mySidebarName) mySidebarName.innerText = escapeHTML(myName) + ' (Me)';
 
 const chatContainer = document.getElementById('chatContainer');
 const chatForm = document.getElementById('chatForm');
 const messageInput = document.getElementById('messageInput');
 const sendBtn = document.getElementById('sendBtn');
+const myName = localStorage.getItem('userName');
 
 
-async function loadChatHistory() {
-    try {
-        // await fetchAPI(`/rooms/${roomId}/messages`);
-        await new Promise(resolve => setTimeout(resolve, 800)); // demo loading
+// ==============
+//   WEB SOCKET
+// ==============
+let socket;
+let isConnected = false;
+
+// switch
+// here
+const USE_MOCK_SERVER = true; 
+
+class MockWebSocket {
+    constructor(url) {
+        console.log(`[Mock Server] connecting: ${url}`);
         
-        chatContainer.innerHTML = "";
+        setTimeout(() => {
+            if (this.onopen) this.onopen();
+        }, 500);
 
-        const welcomeMessage = `
-            <div class="message-row other">
-                <div>
-                    <span class="sender-name">System</span>
-                    <div class="bubble emotion_happy">
-                        Welcome to the room! Let's chat with emotion.
-                    </div>
-                </div>
-            </div>
-        `;
-        chatContainer.insertAdjacentHTML('beforeend', welcomeMessage);
-        chatContainer.scrollTop = chatContainer.scrollHeight;
+        this.botInterval = setInterval(() => {
+            if (this.onmessage) {
+                const randomMsg = [
+                    "hi", 
+                    "good", 
+                    "wow", 
+                    "no"
+                ];
+                const randomEmotion = ['emotion_happy', 'emotion_surprise', 'emotion_neutral', 'emotion_fear'];
+                this.onmessage({
+                    data: JSON.stringify({
+                        username: "bot",
+                        message: randomMsg[Math.floor(Math.random() * randomMsg.length)],
+                        emotion: randomEmotion[Math.floor(Math.random() * randomEmotion.length)]
+                    })
+                });
+            }
+        }, 1000);
+    }
 
-    } catch (error) {
-        showToast('Failed to load chat history.', 'error');
+    send(dataStr) {
+        const parsedData = JSON.parse(dataStr);
+        
+        setTimeout(() => {
+            if (this.onmessage) {
+                const randomEmotion = ['emotion_happy', 'emotion_sad', 'emotion_angry', 'emotion_fear', 'emotion_surprise', 'emotion_neutral', 'emotion_disgust'];
+                this.onmessage({
+                    data: JSON.stringify({
+                        username: parsedData.username,
+                        message: parsedData.message,
+                        emotion: randomEmotion[Math.floor(Math.random() * randomEmotion.length)]
+                    })
+                });
+            }
+        }, 300);
+    }
+    
+    close() {
+        clearInterval(this.botInterval);
+        if (this.onclose) this.onclose();
     }
 }
-loadChatHistory();
 
-
-chatForm.addEventListener('submit', async function (e) {
-    e.preventDefault();
-    const text = messageInput.value.trim();
-    if (!text) return;
-
-    const safeText = escapeHTML(text);
+function connectWebSocket() {
+    const wsUrl = `ws://127.0.0.1:8000/ws/chat/${roomId}/?token=${token}`;
     
-    messageInput.value = '';
-    sendBtn.disabled = true;
-
     try {
-        /*
-        const response = await fetchAPI(`/rooms/${roomId}/messages`, {
-            method: 'POST',
-            body: JSON.stringify({ message: safeText })
-        });
-        const emotionClass = response.emotion; // 서버의 AI가 분석해준 감정 클래스
-        */
+        if (USE_MOCK_SERVER) {
+            socket = new MockWebSocket(wsUrl);
+        } else {
+            socket = new WebSocket(wsUrl);
+        }
 
-        // code for demo
-        await new Promise(resolve => setTimeout(resolve, 300));
-        const emotions = ['emotion_happy', 'emotion_sad', 'emotion_angry', 'emotion_fear', 'emotion_surprise', 'emotion_neutral'];
-        const randomEmotion = emotions[Math.floor(Math.random() * emotions.length)];
+        socket.onopen = function () {
+            isConnected = true;
+            document.getElementById('loadingChat').innerText = 'Connected! Ready to chat.';
+            setTimeout(() => { document.getElementById('loadingChat').style.display = 'none'; }, 1000);
+        };
 
-        const newMessage = `
-            <div class="message-row me">
-                <div class="bubble ${randomEmotion}">
-                    ${safeText}
-                </div>
-            </div>
-        `;
+        socket.onmessage = function (event) {
+            const data = JSON.parse(event.data);
+            if (data.message) {
+                const chatData = {
+                    senderName: data.username,
+                    message: data.message,
+                    emotion: data.emotion || 'emotion_neutral' 
+                };
+                renderChatMessage(chatData);
+            }
+        };
 
-        chatContainer.insertAdjacentHTML('beforeend', newMessage);
-        
-        chatContainer.scrollTo({
-            top: chatContainer.scrollHeight,
-            behavior: 'smooth'
-        });
+        socket.onclose = function () {
+            isConnected = false;
+            showToast('Disconnected from server. Reconnecting...', 'error');
+            setTimeout(connectWebSocket, 3000);
+        };
 
-    } catch (error) {
-        showToast('Failed to send message.', 'error');
-    } finally {
-        sendBtn.disabled = false;
-        messageInput.focus();
+        socket.onerror = function (error) {
+            console.error('WebSocket Error:', error);
+        };
+
+    } catch (e) {
+        showToast('WebSocket initialization failed.', 'error');
     }
-});
+}
