@@ -1,24 +1,19 @@
-const token = localStorage.getItem('accessToken');
-if (!token) {
-    alert("Please log in first!");
-    window.location.replace('login.html');
+if (!localStorage.getItem('accessToken')) {
+    localStorage.setItem('accessToken', 'mock_token_123');
+    localStorage.setItem('userName', 'me');
 }
 
 const urlParams = new URLSearchParams(window.location.search);
-const roomId = urlParams.get('roomId');
-const roomTitle = urlParams.get('title');
-
-if (!roomId) {
-    alert("Invalid room approach.");
-    window.location.replace('search-room.html');
-}
+let roomId = urlParams.get('roomId') || 'test_room';
+let roomTitle = urlParams.get('title') || 'test room';
 
 function showToast(message, type = 'success') {
     const toastEl = document.getElementById('appToast');
     const toastMessage = document.getElementById('toastMessage');
+    if(!toastEl || !toastMessage) return;
     toastMessage.innerText = message;
-    toastEl.className = type === 'error'
-        ? 'toast align-items-center text-bg-danger border-0'
+    toastEl.className = type === 'error' 
+        ? 'toast align-items-center text-bg-danger border-0' 
         : 'toast align-items-center text-bg-success border-0';
     const toast = new bootstrap.Toast(toastEl, { delay: 3000 });
     toast.show();
@@ -26,34 +21,13 @@ function showToast(message, type = 'success') {
 
 function escapeHTML(str) {
     if (!str) return '';
-    return String(str).replace(/[&<>'"]/g, function (tag) {
+    return String(str).replace(/[&<>'"]/g, function(tag) {
         const charsToReplace = { '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' };
         return charsToReplace[tag] || tag;
     });
 }
 
-function timeSince(dateString) {
-    if (!dateString) return '';
-    const date = new Date(dateString);
-    const seconds = Math.floor((new Date() - date) / 1000);
-
-    let interval = seconds / 31536000;
-    if (interval > 1) return Math.floor(interval) + "year ago";
-    interval = seconds / 2592000;
-    if (interval > 1) return Math.floor(interval) + "month ago";
-    interval = seconds / 86400;
-    if (interval > 1) return Math.floor(interval) + "day ago";
-    interval = seconds / 3600;
-    if (interval > 1) return Math.floor(interval) + "hour ago";
-    interval = seconds / 60;
-    if (interval > 1) return Math.floor(interval) + "minute ago";
-    return "just now";
-}
-
-if (roomTitle) {
-    document.getElementById('room-title').innerText = escapeHTML(roomTitle);
-}
-
+document.getElementById('room-title').innerText = escapeHTML(roomTitle);
 const chatContainer = document.getElementById('chatContainer');
 const chatForm = document.getElementById('chatForm');
 const messageInput = document.getElementById('messageInput');
@@ -61,19 +35,12 @@ const sendBtn = document.getElementById('sendBtn');
 const myName = localStorage.getItem('userName');
 
 
-// ==============
-//   WEB SOCKET
-// ==============
-let socket;
-let isConnected = false;
-
-// switch
-// here
-const USE_MOCK_SERVER = true; 
-
+// ==================
+// Mock Server
+// ==================
 class MockWebSocket {
-    constructor(url) {
-        console.log(`[Mock Server] connecting: ${url}`);
+    constructor() {
+        console.log("[Mock Server].");
         
         setTimeout(() => {
             if (this.onopen) this.onopen();
@@ -82,12 +49,13 @@ class MockWebSocket {
         this.botInterval = setInterval(() => {
             if (this.onmessage) {
                 const randomMsg = [
-                    "hi", 
                     "good", 
-                    "wow", 
+                    "hi", 
+                    "nice", 
                     "no"
                 ];
-                const randomEmotion = ['emotion_happy', 'emotion_surprise', 'emotion_neutral', 'emotion_fear'];
+                const randomEmotion = ['emotion_happy', 'emotion_surprise', 'emotion_neutral', 'emotion_sad'];
+                
                 this.onmessage({
                     data: JSON.stringify({
                         username: "bot",
@@ -96,71 +64,87 @@ class MockWebSocket {
                     })
                 });
             }
-        }, 1000);
+        }, 5000);
     }
 
     send(dataStr) {
         const parsedData = JSON.parse(dataStr);
+        const text = parsedData.message;
         
         setTimeout(() => {
             if (this.onmessage) {
-                const randomEmotion = ['emotion_happy', 'emotion_sad', 'emotion_angry', 'emotion_fear', 'emotion_surprise', 'emotion_neutral', 'emotion_disgust'];
+                let emotionClass = 'emotion_neutral';
+                if (text.includes('good')) emotionClass = 'emotion_happy';
+                else if (text.includes('sorrow')) emotionClass = 'emotion_sad';
+                else if (text.includes('mad')) emotionClass = 'emotion_angry';
+                else if (text.includes('scary')) emotionClass = 'emotion_fear';
+                else if (text.includes('wow')) emotionClass = 'emotion_surprise';
+                else if (text.includes('no') || text.includes('no')) emotionClass = 'emotion_disgust';
+
                 this.onmessage({
                     data: JSON.stringify({
                         username: parsedData.username,
-                        message: parsedData.message,
-                        emotion: randomEmotion[Math.floor(Math.random() * randomEmotion.length)]
+                        message: text,
+                        emotion: emotionClass
                     })
                 });
             }
         }, 300);
     }
-    
-    close() {
-        clearInterval(this.botInterval);
-        if (this.onclose) this.onclose();
-    }
 }
+
+let socket;
+let isConnected = false;
 
 function connectWebSocket() {
-    const wsUrl = `ws://127.0.0.1:8000/ws/chat/${roomId}/?token=${token}`;
-    
-    try {
-        if (USE_MOCK_SERVER) {
-            socket = new MockWebSocket(wsUrl);
-        } else {
-            socket = new WebSocket(wsUrl);
+    socket = new MockWebSocket();
+
+    socket.onopen = function () {
+        isConnected = true;
+        const loadingEl = document.getElementById('loadingChat');
+        if(loadingEl) {
+            loadingEl.innerText = 'Connected! Ready to chat.';
+            setTimeout(() => { loadingEl.style.display = 'none'; }, 800);
         }
+    };
 
-        socket.onopen = function () {
-            isConnected = true;
-            document.getElementById('loadingChat').innerText = 'Connected! Ready to chat.';
-            setTimeout(() => { document.getElementById('loadingChat').style.display = 'none'; }, 1000);
-        };
+    socket.onmessage = function (event) {
+        const data = JSON.parse(event.data);
+        if (data.message) {
+            const isMe = data.username === myName;
+            const safeText = escapeHTML(data.message);
+            const safeSender = escapeHTML(data.username);
+            const emotionClass = escapeHTML(data.emotion);
 
-        socket.onmessage = function (event) {
-            const data = JSON.parse(event.data);
-            if (data.message) {
-                const chatData = {
-                    senderName: data.username,
-                    message: data.message,
-                    emotion: data.emotion || 'emotion_neutral' 
-                };
-                renderChatMessage(chatData);
-            }
-        };
+            const messageHtml = `
+                <div class="message-row ${isMe ? 'me' : 'other'}">
+                    <div>
+                        ${!isMe ? `<span class="sender-name">${safeSender}</span>` : ''}
+                        <div class="bubble ${emotionClass}">
+                            ${safeText}
+                        </div>
+                    </div>
+                </div>
+            `;
 
-        socket.onclose = function () {
-            isConnected = false;
-            showToast('Disconnected from server. Reconnecting...', 'error');
-            setTimeout(connectWebSocket, 3000);
-        };
-
-        socket.onerror = function (error) {
-            console.error('WebSocket Error:', error);
-        };
-
-    } catch (e) {
-        showToast('WebSocket initialization failed.', 'error');
-    }
+            chatContainer.insertAdjacentHTML('beforeend', messageHtml);
+            chatContainer.scrollTo({ top: chatContainer.scrollHeight, behavior: 'smooth' });
+        }
+    };
 }
+
+chatForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+    const text = messageInput.value.trim();
+    if (!text || !isConnected) return;
+
+    socket.send(JSON.stringify({
+        message: text,
+        username: myName
+    }));
+    
+    messageInput.value = '';
+    messageInput.focus();
+});
+
+connectWebSocket();
