@@ -1,0 +1,101 @@
+# ==============================================================================
+# 인증(Authentication) API 명세서 [cite: 1]
+# ==============================================================================
+# 기본 URL: /api (프론트엔드의 api.js에서 자동으로 추가됨) [cite: 1]
+# 공통 요청 Content-Type: application/json [cite: 1]
+#
+# 공통 에러 응답 요구사항: [cite: 1]
+# HTTP 상태 코드가 2xx가 아닐 경우, 프론트엔드의 토스트(toast) 알림이 메시지를 [cite: 1]
+# 정확하게 파싱하고 표시할 수 있도록 백엔드는 반드시 아래의 JSON 구조를 반환해야 합니다: [cite: 1]
+# {
+#   "message": "프론트엔드 토스트에 표시될 에러 설명"
+# }
+# ==============================================================================
+
+--------------------------------------------------------------------------------
+1. 아이디 중복 확인 [cite: 1]
+--------------------------------------------------------------------------------
+회원가입 페이지에서 아이디 입력 필드가 포커스를 잃을 때(blur 이벤트) 트리거됩니다. [cite: 1]
+
+* URL: /api/check-id [cite: 2]
+* Method: `GET` [cite: 2]
+* 쿼리 파라미터 (Query Parameters): [cite: 2]
+  - id (문자열, 필수): 확인할 아이디 (최소 4자, 최대 10자). [cite: 2]
+
+* 요청 예시 (Request Example): [cite: 3]
+  GET /api/check-id?id=zxcv
+
+* 성공 응답 (Success Response): [cite: 3]
+  - HTTP 상태 코드: 200 OK [cite: 3]
+  - 본문 (Body): (특정 본문은 필요하지 않으며, 응답 상태 코드로 성공 여부를 결정함) [cite: 3]
+
+* 에러 응답 (이미 사용 중인 아이디일 경우): [cite: 3]
+  - HTTP 상태 코드: 409 Conflict (또는 400 Bad Request) [cite: 3]
+  - 본문 (JSON): [cite: 3]
+    {
+      "message": "This ID is already in use."
+    }
+
+--------------------------------------------------------------------------------
+2. 회원가입 [cite: 4]
+--------------------------------------------------------------------------------
+사용자가 "Sign Up" 버튼을 클릭할 때 트리거됩니다. [cite: 4] 프론트엔드에서 누락된 입력값과 길이 요구사항(아이디: 4-10자, 비밀번호: 8-20자)에 대한 유효성 검사를 수행합니다. [cite: 5]
+
+* URL: /api/signup [cite: 6]
+* Method: `POST` [cite: 6]
+* 요청 본문 (JSON Body): [cite: 6]
+  - nickname (문자열, 필수): 사용자의 프로필 표시 이름 (닉네임). [cite: 6]
+  - id (문자열, 필수): 로그인을 위한 고유 식별자 (4-10자). [cite: 7]
+  - password (문자열, 필수): 계정 비밀번호 (8-20자). [cite: 7]
+
+* 요청 예시 (Request Example): [cite: 8]
+  {
+    "nickname": "asdf",
+    "id": "zxcv",
+    "password": "password123"
+  }
+
+* 성공 응답 (Success Response): [cite: 8]
+  - HTTP 상태 코드: 201 Created (또는 200 OK) [cite: 8]
+  - 본문 (Body): (어떠한 응답 페이로드도 가능하며 비어있어도 됨. JSON 구조도 괜찮음) [cite: 8]
+
+* 에러 응답 (Error Response): [cite: 8]
+  - HTTP 상태 코드: 400 Bad Request [cite: 8]
+  - 본문 (JSON): [cite: 8]
+    {
+      "message": "Failed to communicate with the server. Please try again later."
+    }
+
+--------------------------------------------------------------------------------
+3. 로그인 [cite: 9]
+--------------------------------------------------------------------------------
+로그인 페이지에서 사용자가 "Enter" 버튼을 클릭할 때 트리거됩니다. [cite: 9] 성공적인 응답을 받으면 프론트엔드는 반환된 token과 userName을 localStorage에 저장합니다. [cite: 10]
+
+* URL: /api/login [cite: 11]
+* Method: `POST` [cite: 11]
+* 요청 본문 (JSON Body): [cite: 11]
+  - id (문자열, 필수): 사용자 로그인 식별자. [cite: 11]
+  - password (문자열, 필수): 사용자 계정 비밀번호. [cite: 12]
+
+* 요청 예시 (Request Example): [cite: 12]
+  {
+    "id": "zxcv",
+    "password": "password123"
+  }
+
+* 성공 응답 (Success Response): [cite: 12]
+  - HTTP 상태 코드: 200 OK [cite: 12]
+  - 본문 (JSON): [cite: 12]
+    ⚠️ 중요: 프론트엔드에서 요구하는 대로 키 이름이 반드시 'token' 및 'userName'과 정확히 일치해야 합니다. [cite: 12]
+    {
+      "token": "서버에서_생성한_JWT_또는_인증_토큰",
+      "userName": "사용자_표시_이름_또는_닉네임"
+    }
+
+* 에러 응답 (Error Response): [cite: 13]
+  - HTTP 상태 코드: 401 Unauthorized [cite: 13]
+  - 본문 (JSON): [cite: 13]
+    {
+      "message": "Login failed. Please check your ID and password."
+    }
+==============================================================================
