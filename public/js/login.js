@@ -1,3 +1,14 @@
+function showToast(message, type = 'success') {
+    const toastEl = document.getElementById('appToast');
+    const toastMessage = document.getElementById('toastMessage');
+    toastMessage.innerText = message;
+    toastEl.className = type === 'error' 
+        ? 'toast align-items-center text-bg-danger border-0' 
+        : 'toast align-items-center text-bg-success border-0';
+    const toast = new bootstrap.Toast(toastEl, { delay: 3000 });
+    toast.show();
+}
+
 const loginForm = document.getElementById('loginForm');
 const loginBtn = document.getElementById('loginBtn');
 
@@ -13,7 +24,6 @@ loginForm.addEventListener('submit', async function (event) {
     const enteredId = document.getElementById('userId').value;
     const enteredPw = document.getElementById('userPw').value;
 
-    // Disable button before sending the request to prevent double-clicking
     loginBtn.disabled = true;
     loginBtn.innerText = 'Loading...';
 
@@ -27,15 +37,15 @@ loginForm.addEventListener('submit', async function (event) {
         localStorage.setItem('accessToken', data.token);
         localStorage.setItem('userName', data.userName);
 
-        alert(`Welcome, ${data.userName}!`);
-        window.location.href = 'room-list.html';
+        showToast(`Welcome, ${data.userName}!`, 'success');
+        setTimeout(() => {
+            window.location.href = 'room-list.html';
+        }, 1000);
 
     } catch (error) {
-        // Display the error message thrown from api.js to the user
-        alert(error.message || 'Login failed. Please check your ID and password.');
-        document.getElementById('userPw').value = ''; // Clear the password field only
+        showToast('Login failed. Please check your ID and password.', 'error');
+        document.getElementById('userPw').value = '';
     } finally {
-        // Restore the button state regardless of success or failure
         loginBtn.disabled = false;
         loginBtn.innerText = 'Enter';
     }

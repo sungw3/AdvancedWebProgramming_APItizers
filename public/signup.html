@@ -29,27 +29,25 @@
 
                 <div class="mb-3">
                     <label for="newId" class="form-label fw-bold">ID</label>
-                    <label for="newId" class="form-label">ID should be at least 4 characters long</label>
-                    <input type="text" class="form-control" id="newId" required>
-                    <div class="input-hint">This will be your unique login ID.</div>
+                    <input type="text" class="form-control" id="newId" required minlength="4" maxlength="10">
+                    <div class="input-hint">ID must be 4-10 characters.</div>
                     <div class="invalid-feedback">
-                        Please choose an ID.
+                        ID must be between 4 and 10 characters.
                     </div>
-                    <button type="button" class="btn btn-success btn-lg" id="checkIdBtn">Check Duplicate ID</button>
                 </div>
 
                 <div class="mb-3">
                     <label for="newPw" class="form-label fw-bold">Password</label>
-                    <input type="password" class="form-control" id="newPw" required minlength="4">
-                    <div class="input-hint">Enter at least 4 characters.</div>
+                    <input type="password" class="form-control" id="newPw" required minlength="8" maxlength="20">
+                    <div class="input-hint">Password must be 8-20 characters.</div>
                     <div class="invalid-feedback">
-                        Please enter a password.
+                        Password must be between 8 and 20 characters.
                     </div>
                 </div>
 
                 <div class="mb-3">
                     <label for="confirmPw" class="form-label fw-bold">Confirm Password</label>
-                    <input type="password" class="form-control" id="confirmPw" required>
+                    <input type="password" class="form-control" id="confirmPw" required minlength="8" maxlength="20">
                     <div class="input-hint">Please re-enter your password to confirm.</div>
                     <div class="invalid-feedback">
                         Please confirm your password.
@@ -64,6 +62,17 @@
             <div class="text-center mt-4">
                 <span class="small text-muted">Already have an account?</span>
                 <a href="login.html" class="text-decoration-none small">Log In</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1055;">
+        <div id="appToast" class="toast align-items-center text-bg-primary border-0" role="alert" aria-live="assertive"
+            aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body" id="toastMessage"></div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                    aria-label="Close"></button>
             </div>
         </div>
     </div>
