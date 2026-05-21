@@ -81,12 +81,7 @@ form.addEventListener('submit', async function (event) {
         }, 1000);
 
     } catch (error) {
-        showToast('[Test] Server offline. Moving to mock chat room...', 'error');
-        setTimeout(() => {
-            const urlSafeTitle = encodeURIComponent(roomData.title);
-            location.href = `chat-room.html?roomId=mock_room_123&title=${urlSafeTitle}`;
-        }, 1500);
-        
+       showToast(error.message || 'Failed to create room. Please try again.', 'error');
     } finally {
 
         createBtn.disabled = false;
