@@ -1,0 +1,68 @@
+.navbar {
+    background-color: #2D1212 !important;
+    border-bottom: 1px solid #000000 !important; 
+}
+
+.navbar-brand {
+    color: #F5EBE0 !important; 
+    font-weight: 800 !important;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    letter-spacing: 0.5px;
+}
+
+.navbar .nav-link {
+    color: #F5EBE0 !important; 
+    font-weight: 500;
+}
+
+.navbar .nav-link:hover, .navbar .nav-link.active {
+    color: #5ccaeb !important; 
+}
+
+.navbar-toggler {
+    border-color: #F5EBE0 !important;
+}
+
+.custom-menu-btn {
+    color: #F5EBE0 !important;
+    border: 1px solid #F5EBE0 !important;
+    border-radius: 5px;
+    padding: 10px 15px;
+    font-size: 16px;
+    font-weight: 600;
+    background-color: transparent;
+}
+.custom-menu-btn:hover {
+    background-color: #F5EBE0 !important;
+    color: #2D1212 !important;
+}
+
+.custom-menu-btn:focus {
+    box-shadow: none !important;
+}
+
+.offcanvas {
+    background-color: #2D1212 !important;
+    color: #F5EBE0 !important;
+}
+.offcanvas-header .btn-close {
+    filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+#login-section .btn-primary {
+    background-color: #F5EBE0 !important;
+    border: 1px solid #F5EBE0 !important;
+    color: #2D1212 !important;
+    border: 2px solid #F5EBE0 !important;
+    font-weight: 600;
+    font-size: 16px;
+    border-radius: 20px;
+    
+}
+
+#login-section .btn-primary:hover {
+    background-color: #F5EBE0 !important; 
+    border-color: #2D1212 !important;
+    color: #2D1212 !important;
+    border-radius: 30px;
+}
