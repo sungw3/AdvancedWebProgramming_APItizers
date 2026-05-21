@@ -1,0 +1,48 @@
+# ==============================================================================
+# SEARCH ROOM (ROOM LIST & SEARCH) API SPECIFICATION
+# ==============================================================================
+# Base URL: /api (Automatically prepended by frontend api.js)
+# Global Request Content-Type: application/json
+# Authorization: Not required for browsing, but enterRoom requires token validation.
+# ==============================================================================
+
+--------------------------------------------------------------------------------
+1. BROWSE & SEARCH ROOMS
+--------------------------------------------------------------------------------
+Triggered when loading the room list page, switching pages, or performing a search.
+
+* URL: /api/rooms
+* Method: `GET`
+* Query Parameters:
+  - page (Integer, Required): Current page number (starts from 1).
+  - limit (Integer, Required): Number of items per page (frontend sends 20).
+  - search (String, Optional): Search keyword to filter room titles.
+
+* Request Example:
+  GET /api/rooms?page=1&limit=20&search=Emotion
+
+* Success Response:
+  - HTTP Status: 200 OK
+  - Body (JSON):
+    ⚠️ CRITICAL: Frontend expects the exact keys 'totalRooms' and 'rooms' 
+    containing an array of objects with 'id', 'title', 'host', 'count', and 'max'.
+    {
+      "totalRooms": 45,
+      "rooms": [
+        {
+          "id": "room_123",
+          "title": "Happy Chatting Room",
+          "host": "User_42",
+          "count": 3,
+          "max": 10
+        }
+      ]
+    }
+
+* Error Response:
+  - HTTP Status: 500 Internal Server Error (or 400 Bad Request)
+  - Body (JSON):
+    {
+      "message": "Failed to load room list."
+    }
+==============================================================================

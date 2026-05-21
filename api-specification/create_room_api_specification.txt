@@ -1,0 +1,48 @@
+# ==============================================================================
+# CREATE ROOM API SPECIFICATION
+# ==============================================================================
+# Base URL: /api (Automatically prepended by frontend api.js)
+# Global Request Content-Type: application/json
+# Authorization: Required (Bearer Token)
+# ==============================================================================
+
+--------------------------------------------------------------------------------
+1. CREATE NEW CHAT ROOM
+--------------------------------------------------------------------------------
+Triggered when the user submits the create room form.
+
+* URL: /api/rooms
+* Method: `POST`
+* Headers:
+  - Authorization: Bearer <accessToken>
+* Request Body (JSON):
+  - title (String, Required): Title of the chat room. (Trimmed by frontend)
+  - subtitle (String, Optional/Nullable): Subtitle or description of the room.
+  - maxParticipants (Integer, Required): Maximum number of allowed users (2-10).
+  - isPrivate (Boolean, Required): True if password-protected, false otherwise.
+  - password (String or Null, Required): Room password if isPrivate is true, null otherwise.
+
+* Request Example:
+  {
+    "title": "Let's talk about our day",
+    "subtitle": "Warm and cozy vibes only",
+    "maxParticipants": 6,
+    "isPrivate": true,
+    "password": "roompassword123"
+  }
+
+* Success Response:
+  - HTTP Status: 201 Created (or 200 OK)
+  - Body (JSON):
+    ⚠️ CRITICAL: Frontend requires the exact key 'roomId' to redirect to the new chat room.
+    {
+      "roomId": "generated_room_uuid_or_string"
+    }
+
+* Error Response:
+  - HTTP Status: 400 Bad Request / 401 Unauthorized
+  - Body (JSON):
+    {
+      "message": "Failed to create room. Please try again."
+    }
+==============================================================================
