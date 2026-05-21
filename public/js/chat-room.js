@@ -1,7 +1,4 @@
-if (!localStorage.getItem('accessToken')) {
-    alert("Please log in first!");
-    window.location.replace('login.html');
-}
+
 
 const urlParams = new URLSearchParams(window.location.search);
 const roomId = urlParams.get('roomId');
