@@ -1,3 +1,19 @@
+if (!localStorage.getItem('accessToken')) {
+    alert('Please log in first.');
+    window.location.replace('login.html');
+}
+
+function showToast(message, type = 'success') {
+    const toastEl = document.getElementById('appToast');
+    const toastMessage = document.getElementById('toastMessage');
+    toastMessage.innerText = message;
+    toastEl.className = type === 'error' 
+        ? 'toast align-items-center text-bg-danger border-0' 
+        : 'toast align-items-center text-bg-success border-0';
+    const toast = new bootstrap.Toast(toastEl, { delay: 3000 });
+    toast.show();
+}
+
 const rangeInput = document.getElementById('maxParticipants');
 const rangeValue = document.getElementById('rangeValue');
 
@@ -32,6 +48,7 @@ window.addEventListener('pageshow', function () {
 });
 
 const form = document.getElementById('createRoomForm');
+const createBtn = document.getElementById('createBtn');
 
 form.addEventListener('submit', async function (event) {
     event.preventDefault();
@@ -42,36 +59,40 @@ form.addEventListener('submit', async function (event) {
         return;
     }
 
+    createBtn.disabled = true;
+    createBtn.innerText = 'Creating...';
+
     const roomData = {
-        title: document.getElementById('roomTitle').value,
-        subtitle: document.getElementById('roomSubtitle').value,
-        maxParticipants: document.getElementById('maxParticipants').value,
+        title: document.getElementById('roomTitle').value.trim(),
+        subtitle: document.getElementById('roomSubtitle').value.trim(),
+        maxParticipants: parseInt(document.getElementById('maxParticipants').value, 10),
         isPrivate: document.getElementById('privateSwitch').checked,
         password: document.getElementById('privateSwitch').checked ? document.getElementById('roomPassword').value : null
     };
 
     try {
-        const response = await fetch('https://server/api/rooms', {
+        const result = await fetchAPI('/rooms', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
-            },
             body: JSON.stringify(roomData)
         });
 
-        if (response.ok) {
-            const result = await response.json();
-            alert('Room created! Moving to chat room.');
-            location.href = `chat.html?roomId=${result.roomId}`;
-        } else {
-            alert('Failed to create room. Please try again.');
-        }
+        showToast('Room created successfully!', 'success');
+        
+        setTimeout(() => {
+            const urlSafeTitle = encodeURIComponent(roomData.title);
+            location.href = `chat-room.html?roomId=${result.roomId}&title=${urlSafeTitle}`;
+        }, 1000);
 
     } catch (error) {
-        console.error('Server communication error:', error);
-        // Test purpose when server is not available
-        alert('[test] Server not available, moving to chat room.');
-        location.href = 'chat.html';
+        showToast('[Test] Server offline. Moving to mock chat room...', 'error');
+        setTimeout(() => {
+            const urlSafeTitle = encodeURIComponent(roomData.title);
+            location.href = `chat-room.html?roomId=mock_room_123&title=${urlSafeTitle}`;
+        }, 1500);
+        
+    } finally {
+
+        createBtn.disabled = false;
+        createBtn.innerText = 'Create & Enter';
     }
 });
