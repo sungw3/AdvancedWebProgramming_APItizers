@@ -175,7 +175,7 @@ function escapeHTML(str) {
 
 const dummyRooms = Array.from({ length: 45 }, (_, i) => ({
     id: `room-${i + 1}`,
-    title: `ㅎㅇ ${i + 1} 🎨`,
+    title: `ㅎㅇ ${i + 1} `,
     host: `User${Math.floor(Math.random() * 1000)}`,
     count: Math.floor(Math.random() * 10),
     max: 10
