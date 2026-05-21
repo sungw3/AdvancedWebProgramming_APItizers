@@ -1,0 +1,58 @@
+# ==============================================================================
+# CHAT ROOM WEBSOCKET API SPECIFICATION
+# ==============================================================================
+# Protocol: WebSocket (ws:// for local, wss:// for production)
+# Base Endpoint: /ws/chat/{roomId}/
+# Authentication: Currently handled via Django sessions/middleware. 
+#                 (If JWT is used later, backend middleware needs an update to accept ?token=)
+# ==============================================================================
+
+--------------------------------------------------------------------------------
+1. CLIENT -> SERVER (Send Message)
+--------------------------------------------------------------------------------
+Triggered when a user types a message and clicks 'Send'.
+
+* Payload Format: JSON
+* Structure:
+  {
+    "username": "String (Sender's nickname)",
+    "message": "String (The chat message)"
+  }
+
+* Request Example:
+  {
+    "username": "testuser1",
+    "message": "I am so happy today!"
+  }
+
+--------------------------------------------------------------------------------
+2. SERVER -> CLIENT (Broadcast Message & Emotion)
+--------------------------------------------------------------------------------
+Triggered by the server to broadcast the received message to all users in the room.
+⚠️ CRITICAL FOR BACKEND: The backend AI MUST analyze the message and append the 
+'emotion' key before broadcasting it back to the clients.
+
+* Payload Format: JSON
+* Structure:
+  {
+    "username": "String (Sender's nickname)",
+    "message": "String (The chat message)",
+    "emotion": "String (Matched frontend CSS class)"
+  }
+
+* Response Example:
+  {
+    "username": "testuser1",
+    "message": "I am so happy today!",
+    "emotion": "emotion_happy"
+  }
+
+* Valid Emotion Classes for Frontend:
+  - emotion_happy
+  - emotion_sad
+  - emotion_angry
+  - emotion_fear
+  - emotion_surprise
+  - emotion_disgust
+  - emotion_neutral
+==============================================================================
