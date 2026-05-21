@@ -328,3 +328,14 @@ document.getElementById('searchInput').addEventListener('keypress', function (e)
 });
 
 fetchAndRenderRooms(currentPage);
+
+
+function forceEnterTestRoom() {
+    localStorage.setItem('accessToken', 'temporary_test_token_123');
+    localStorage.setItem('userName', 'testuser1'); 
+
+    const testRoomId = 'general';
+    const testTitle = encodeURIComponent('testing room');
+    
+    window.location.href = `chat-room.html?roomId=${testRoomId}&title=${testTitle}`;
+}
