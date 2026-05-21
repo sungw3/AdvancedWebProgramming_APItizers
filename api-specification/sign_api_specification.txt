@@ -1,0 +1,103 @@
+# ==============================================================================
+# AUTHENTICATION API SPECIFICATION
+# ==============================================================================
+# Base URL: /api (Automatically prepended by frontend api.js)
+# Global Request Content-Type: application/json
+#
+# Global Error Response Requirement:
+# When HTTP status is NOT 2xx, the backend MUST return the following JSON structure 
+# so that the frontend toast can parse and display the message accurately:
+# {
+#   "message": "Error description to be shown on the frontend toast"
+# }
+# ==============================================================================
+
+--------------------------------------------------------------------------------
+1. CHECK ID AVAILABILITY
+--------------------------------------------------------------------------------
+Triggered on the signup page when the ID input field loses focus (blur event).
+
+* URL: /api/check-id
+* Method: `GET`
+* Query Parameters:
+  - id (String, Required): The ID to check (min 4, max 10 characters).
+
+* Request Example:
+  GET /api/check-id?id=zxcv
+
+* Success Response:
+  - HTTP Status: 200 OK
+  - Body: (No specific body required, response status code determines success)
+
+* Error Response (ID Already in Use):
+  - HTTP Status: 409 Conflict (or 400 Bad Request)
+  - Body (JSON):
+    {
+      "message": "This ID is already in use."
+    }
+
+--------------------------------------------------------------------------------
+2. SIGN UP
+--------------------------------------------------------------------------------
+Triggered when the user clicks the "Sign Up" button. Frontend performs validation 
+for missing inputs and length requirements (ID: 4-10 chars, PW: 8-20 chars).
+
+* URL: /api/signup
+* Method: `POST`
+* Request Body (JSON):
+  - nickname (String, Required): User's profile display name.
+  - id (String, Required): Unique identifier for login (4-10 characters).
+  - password (String, Required): Account password (8-20 characters).
+
+* Request Example:
+  {
+    "nickname": "asdf",
+    "id": "zxcv",
+    "password": "password123"
+  }
+
+* Success Response:
+  - HTTP Status: 201 Created (or 200 OK)
+  - Body: (Any response payload, or empty. JSON structure is fine)
+
+* Error Response:
+  - HTTP Status: 400 Bad Request
+  - Body (JSON):
+    {
+      "message": "Failed to communicate with the server. Please try again later."
+    }
+
+--------------------------------------------------------------------------------
+3. LOG IN
+--------------------------------------------------------------------------------
+Triggered when the user clicks the "Enter" button on the login page. Frontend 
+saves the returned token and userName into localStorage upon a successful response.
+
+* URL: /api/login
+* Method: `POST`
+* Request Body (JSON):
+  - id (String, Required): User login identifier.
+  - password (String, Required): User account password.
+
+* Request Example:
+  {
+    "id": "zxcv",
+    "password": "password123"
+  }
+
+* Success Response:
+  - HTTP Status: 200 OK
+  - Body (JSON):
+    ⚠️ CRITICAL: Keys must match 'token' and 'userName' exactly as frontend requires them.
+    {
+      "token": "YOUR_SERVER_GENERATED_JWT_OR_AUTH_TOKEN",
+      "userName": "USER_DISPLAY_NAME_OR_NICKNAME"
+    }
+
+* Error Response:
+  - HTTP Status: 401 Unauthorized
+  - Body (JSON):
+    {
+      "message": "Login failed. Please check your ID and password."
+    }
+==============================================================================
