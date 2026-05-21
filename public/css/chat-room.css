@@ -1,0 +1,124 @@
+body {
+    margin: 0;
+    overflow: hidden;
+    background-color: #f8f9fa;
+}
+
+
+.chat-wrapper {
+    height: 100vh;
+    display: flex;
+}
+
+/* sidebar is only displayed on desktop */
+.user-sidebar {
+    width: 280px;
+    background-color: #ffffff;
+    border-right: 1px solid #dee2e6;
+    overflow-y: auto;
+}
+
+/* user status dots for online/offline status */
+.status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 8px;
+}
+
+.online-dot {
+    background-color: #28a745;
+}
+
+.offline-dot {
+    background-color: #adb5bd;
+}
+
+/* last online status */
+.last-seen {
+    font-size: 0.8rem;
+    color: #6c757d;
+    margin-left: auto;
+}
+
+
+.chat-main {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    background-color: #f1f3f5;
+}
+
+
+.chat-header {
+    padding: 15px 20px;
+    background-color: #ffffff;
+    border-bottom: 1px solid #dee2e6;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.chat-messages {
+    flex-grow: 1;
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* "default" text bubble */
+.message-row {
+    display: flex;
+    width: 100%;
+}
+
+.message-row.me {
+    justify-content: flex-end;
+}
+
+.message-row.other {
+    justify-content: flex-start;
+}
+
+
+/* display "sender's name" */
+.sender-name {
+    font-size: 0.8rem;
+    color: #495057;
+    margin-bottom: 4px;
+    display: block;
+}
+
+.bubble {
+    max-width: 70%;
+    padding: 10px 15px;
+    border-radius: 18px;
+    position: relative;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.message-row.me .bubble {
+    border-bottom-right-radius: 4px;
+}
+
+.message-row.other .bubble {
+    border-bottom-left-radius: 4px;
+}
+
+
+
+.chat-input-area {
+    padding: 15px 20px;
+    background-color: #ffffff;
+    border-top: 1px solid #dee2e6;
+}
+
+/* hide sidebar on mobile */
+@media (max-width: 768px) {
+    .user-sidebar {
+        display: none;
+    }
+}
