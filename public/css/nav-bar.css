@@ -3,6 +3,7 @@
     border-bottom: 1px solid #000000 !important; 
 }
 
+
 .navbar-brand {
     color: #F5EBE0 !important; 
     font-weight: 800 !important;
@@ -50,9 +51,9 @@
 }
 
 #login-section .btn-primary {
-    background-color: #F5EBE0 !important;
+    background-color: #7ee02e !important;
     border: 1px solid #F5EBE0 !important;
-    color: #2D1212 !important;
+    color: #ffffff !important;
     border: 2px solid #F5EBE0 !important;
     font-weight: 600;
     font-size: 16px;
@@ -61,8 +62,8 @@
 }
 
 #login-section .btn-primary:hover {
-    background-color: #F5EBE0 !important; 
+    background-color: #00ff11 !important; 
     border-color: #2D1212 !important;
-    color: #2D1212 !important;
+    color: #ffffff !important;
     border-radius: 30px;
 }

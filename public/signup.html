@@ -6,32 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up - Chatting with Emotion</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        .register-card {
-            width: 100%;
-            max-width: 400px;
-            padding: 20px;
-        }
+    <link rel="stylesheet" href="css/sign-style.css">
+    
 
-        .input-hint {
-            font-size: 0.8rem;
-            color: #6c757d;
-            display: none;
-            margin-top: 4px;
-            margin-left: 4px;
-        }
-
-        .form-control:focus + .input-hint {
-            display: block;
-        }
-
-        @media (max-width: 576px) {
-            .register-card {
-                margin: 20px;
-                max-width: 100%;
-            }
-        }
-    </style>
 </head>
 
 <body class="bg-light min-vh-100 d-flex align-items-center justify-content-center">
@@ -91,50 +68,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="api.js"></script>
-    <script>
-        const signupForm = document.getElementById('signupForm');
-
-        signupForm.addEventListener('submit', async function (event) {
-            event.preventDefault();
-
-            if (!signupForm.checkValidity()) {
-                event.stopPropagation();
-                signupForm.classList.add('was-validated');
-                return;
-            }
-
-            const newNick = document.getElementById('newNick').value;
-            const newId = document.getElementById('newId').value;
-            const newPw = document.getElementById('newPw').value;
-            const confirmPw = document.getElementById('confirmPw').value;
-
-            if (newPw !== confirmPw) {
-                alert('Passwords do not match. Please try again.');
-                document.getElementById('confirmPw').focus();
-                return;
-            }
-
-            try {
-
-                const data = await fetchAPI('/signup', {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        nickname: newNick,
-                        id: newId,
-                        password: newPw
-                    })
-                });
-
-                console.log('Signup attempt:', { id: newId, nickname: newNick });
-                alert('Signup successful! Please login.');
-                window.location.href = 'login.html';
-
-            } catch (error) {
-                console.error('Communication error:', error);
-                alert('Cannot connect to the server. Please try again later.');
-            }
-        });
-    </script>
+    <script src="js/signup.js"></script>
 </body>
 
 </html>

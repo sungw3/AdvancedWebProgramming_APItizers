@@ -1,0 +1,36 @@
+body {
+    font-family: sans-serif;
+    background: #f9f9f9;
+}
+
+.container {
+    max-width: 800px;
+    margin-top: 40px;
+}
+
+.room-card {
+    transition: transform 0.2s;
+    cursor: pointer;
+}
+
+.room-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.badge-count {
+    font-size: 0.9rem;
+    background-color: #6c757d !important;
+}
+
+#empty-state {
+    display: none;
+    padding: 100px 0;
+    text-align: center;
+}
+
+.empty-icon {
+    font-size: 4rem;
+    color: #ccc;
+    margin-bottom: 20px;
+}

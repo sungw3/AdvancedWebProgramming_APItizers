@@ -1,0 +1,43 @@
+body {
+    font-family: sans-serif;
+    background: #f9f9f9;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 600px;
+    margin-top: 50px;
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.form-label {
+    font-weight: bold;
+}
+
+.was-validated #roomSubtitle.form-control:valid {
+    border-color: #dee2e6 !important;
+    background-image: none !important;
+    box-shadow: none !important;
+}
+
+.was-validated .form-check-input:valid {
+    border-color: rgba(0, 0, 0, 0.25) !important;
+}
+
+.was-validated .form-check-input:valid:checked {
+    border-color: #0d6efd !important;
+    background-color: #0d6efd !important;
+}
+
+#roomSubtitle {
+    height: 80px;
+    resize: none;
+}
+
+#password-area {
+    display: none;
+}
