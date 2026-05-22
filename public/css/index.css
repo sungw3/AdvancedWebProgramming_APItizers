@@ -14,7 +14,7 @@ body::before {
     right: -1px;
     bottom: -1px;
 
-    background-image: var(--bg-image, url('images/bg-index-c5.png'));
+    background-image: var(--bg-image, url('images/bg-index-c6.png'));
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
