@@ -1,10 +1,4 @@
-body {
-    transition: background-image 0.5s ease-in-out, background-color 0.5s ease-in-out;
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-    background-repeat: no-repeat;
-}
+
 
 .navbar {
     background-color: #2D1212 !important;
@@ -42,6 +36,28 @@ body {
 .navbar-toggler {
     border-color: #F5EBE0 !important;
 }
+
+.navbar .theme-toggle-btn {
+    background-color: transparent !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin-right: 40px !important;
+
+    color: #F5EBE0 !important; 
+    
+    font-size: 1.3rem;
+
+    display: inline-flex; 
+    align-items: center;
+    justify-content: center;
+    
+    width: auto !important;
+    height: auto !important;
+    
+}
+.navbar .theme-toggle-btn:hover { color: #fffc61 !important; }
 
 .custom-menu-btn {
     color: #F5EBE0 !important;

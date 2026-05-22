@@ -34,12 +34,53 @@ fetch('nav-bar.html')
 
         const logoutBtn = document.getElementById('logout-btn');
         if (logoutBtn) {
-            logoutBtn.addEventListener('click', function(event) {
+            logoutBtn.addEventListener('click', function (event) {
                 event.preventDefault();
                 localStorage.clear();
                 alert('Logged out successfully.');
                 window.location.href = 'index.html';
             });
         }
+
+        const themeButtons = document.querySelectorAll('.theme-toggle-btn');
+
+
+        const pageBackgrounds = {
+            'index.html': [
+                "url('images/bg-index-c5.png')",
+                "url('images/bg-index-c6.png')",
+                "url('images/bg-index-c2.png')"
+            ],
+            'search-room.html': [
+                "url('images/bg-search-c1.png')",
+                "url('images/bg-index-c5.png')",
+                "url('images/bg-index-c6.png')"
+            ],
+            'create-room.html': [
+                "url('images/bg-create-1.png')",
+                "url('images/bg-create-2.png')"
+            ]
+        };
+
+
+        let currentPageName = window.location.pathname.split('/').pop() || 'index.html';
+
+        const backgroundImages = pageBackgrounds[currentPageName] || pageBackgrounds['index.html'];
+        const storageKey = 'bgIndex_' + currentPageName;
+        const savedBgIndex = localStorage.getItem(storageKey);
+        let currentBgIndex = savedBgIndex ? parseInt(savedBgIndex) : 0;
+
+        if (currentBgIndex >= backgroundImages.length) {
+            currentBgIndex = 0;
+        }
+        document.body.style.setProperty('--bg-image', backgroundImages[currentBgIndex]);
+
+        themeButtons.forEach(btn => {
+            btn.addEventListener('click', function () {
+                currentBgIndex = (currentBgIndex + 1) % backgroundImages.length;
+                document.body.style.setProperty('--bg-image', backgroundImages[currentBgIndex]);
+                localStorage.setItem(storageKey, currentBgIndex);
+            });
+        });
     })
     .catch(error => console.error('Error loading nav bar:', error));
