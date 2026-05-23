@@ -6,8 +6,8 @@ document.addEventListener("DOMContentLoaded", function () {
             "url('images/bg-index-c2.png')"
         ],
         'search-room.html': [
-            "url('images/bg-search-c1.png')",
-            "url('images/bg-search-c3.png')"
+            "url('images/bg-search-c3.png')",
+            "url('images/bg-search-c1.png')"
         ],
         'create-room.html': [
             "url('images/bg-create-1.png')",
