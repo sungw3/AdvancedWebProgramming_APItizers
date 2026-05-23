@@ -88,9 +88,9 @@
 }
 
 #login-section .btn-primary {
-    background-color: #7ee02e !important;
+    background-color: #E6C27A !important;
     border: 1px solid #F5EBE0 !important;
-    color: #ffffff !important;
+    color: #000000 !important;
     border: 2px solid #F5EBE0 !important;
     font-weight: 600;
     font-size: 16px;
@@ -99,9 +99,9 @@
 }
 
 #login-section .btn-primary:hover {
-    background-color: #00ff11 !important;
+    background-color: #E6C27A !important;
     border-color: #2D1212 !important;
-    color: #ffffff !important;
+    color: #000000 !important;
     border-radius: 30px;
 }
 
