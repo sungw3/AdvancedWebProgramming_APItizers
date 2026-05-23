@@ -128,7 +128,6 @@ body::before {
 .register-card a:not(.text-warning),
 .create-room-card a:not(.text-warning) {
     color: #F5EBE0;
-    text-decoration: none;
 }
 
 .login-card a:hover,
@@ -167,20 +166,6 @@ body::before {
     font-weight: bold;
 }
 
-.was-validated #roomSubtitle.form-control:valid {
-    border-color: #dee2e6 !important;
-    background-image: none !important;
-    box-shadow: none !important;
-}
-
-.was-validated .form-check-input:valid {
-    border-color: rgba(0, 0, 0, 0.25) !important;
-}
-
-.was-validated .form-check-input:valid:checked {
-    border-color: #0d6efd !important;
-    background-color: #0d6efd !important;
-}
 
 
 #roomSubtitle {
@@ -216,4 +201,43 @@ body::before {
 .register-card button,
 .create-room-card button {
     margin-top: 10px !important;
+}
+
+
+
+/* ==========================================
+   Create Room page details
+   ========================================== */
+
+/* 1. 하얀색 Cancel 버튼을 투명하고 고급스럽게 변경 */
+.create-room-card .btn-light {
+    background-color: transparent !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    color: #F5EBE0 !important;
+    font-weight: bold;
+}
+
+.create-room-card .btn-light:hover {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    color: #ffffff !important;
+}
+
+/* 2. 슬라이더(인원수 조절) 파란색 동그라미를 테마색(베이지골드)으로 변경 */
+.create-room-card .form-range::-webkit-slider-thumb {
+    background: #E6C27A !important;
+}
+.create-room-card .form-range::-moz-range-thumb {
+    background: #E6C27A !important;
+}
+
+/* 3. 토글 스위치(Private) 켜졌을 때 테마색으로 변경 */
+.create-room-card .form-check-input:checked {
+    background-color: #E6C27A !important;
+    border-color: #E6C27A !important;
+}
+
+/* 4. 라벨(글씨) 위아래 여백을 넉넉하게 주어 숨통 트이게 하기 */
+.create-room-card .form-label {
+    margin-top: 10px;
+    margin-bottom: 8px;
 }

@@ -92,8 +92,8 @@
     border: 1px solid #F5EBE0 !important;
     color: #000000 !important;
     border: 2px solid #F5EBE0 !important;
-    font-weight: 600;
-    font-size: 16px;
+    font-weight: 500;
+    font-size: 15px;
     border-radius: 20px;
 
 }
@@ -149,8 +149,8 @@
     }
 
     #login-section .btn-primary {
-        font-size: 1.5rem !important;
-        padding: 5px 10px !important;
+        font-size: 1.2rem !important;
+        padding: 7px 12px !important;
         border-radius: 30px;
     }
 }
@@ -173,7 +173,7 @@
     }
 
     #login-section .btn-primary {
-        font-size: 2rem !important;
+        font-size: 1.8rem !important;
         padding: 12px 36px !important;
         border-radius: 40px;
     }
