@@ -24,7 +24,9 @@ django를 이용하여 챗 웹 구현하기 + llm을 이용한 채팅 감정 분
 - communication with server
 - dynamic update via server data
 - https://chatting-with-emotion.vercel.app/
+- 백엔드 없이 최종 프론트엔트 코드 돌리는 링크
 - https://apitizers-design-demo.vercel.app/
+- 백엔드에서 받을 데이터 임시로 넣어둔 디자인 확인하는 링크
 
 ## 서버 (backend)
 - Framework: Django
