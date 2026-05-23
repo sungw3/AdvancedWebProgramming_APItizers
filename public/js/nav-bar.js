@@ -8,10 +8,6 @@ document.addEventListener("DOMContentLoaded", function () {
         'search-room.html': [
             "url('images/bg-search-c3.png')",
             "url('images/bg-search-c1.png')"
-        ],
-        'create-room.html': [
-            "url('images/bg-create-1.png')",
-            "url('images/bg-create-2.png')"
         ]
     };
 
@@ -20,6 +16,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (currentPageName === 'login.html' || currentPageName === 'signup.html') {
         bgTargetPage = 'index.html';
+    } else if (currentPageName === 'create-room.html') {
+        bgTargetPage = 'search-room.html';
     }
 
     const backgroundImages = pageBackgrounds[bgTargetPage] || pageBackgrounds['index.html'];
