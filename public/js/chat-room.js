@@ -5,17 +5,13 @@ if (!token) {
 }
 
 const urlParams = new URLSearchParams(window.location.search);
-const roomId = urlParams.get('roomId');
-const roomTitle = urlParams.get('title');
-
-if (!roomId) {
-    alert("Invalid room approach.");
-    window.location.replace('search-room.html');
-}
+let roomId = urlParams.get('roomId') || 'test_room';
+let roomTitle = urlParams.get('title') || 'test room';
 
 function showToast(message, type = 'success') {
     const toastEl = document.getElementById('appToast');
     const toastMessage = document.getElementById('toastMessage');
+    if(!toastEl || !toastMessage) return;
     toastMessage.innerText = message;
     toastEl.className = type === 'error'
         ? 'toast align-items-center text-bg-danger border-0'
