@@ -2,6 +2,80 @@ body {
     font-family: sans-serif;
     background: #f9f9f9;
 }
+body::before {
+    content: "";
+    position: fixed;
+    top: -1px; left: -1px; right: -1px; bottom: -1px;
+    
+    background-image: var(--bg-image, url('images/bg-search-c3.png')); 
+    
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    z-index: -2; 
+}
+
+.btn-primary {
+    background-color: #2D1212 !important;
+    border: 1px solid #f5ebe070 !important;
+    color: #F5EBE0 !important;
+    transition: background-color 0.3s ease;
+}
+.btn-primary:hover {
+    background-color: #f5ebe0b6 !important;
+    color: #ffffff !important;
+}
+
+
+.status-box {
+    background-color: rgba(0, 0, 0, 0.8) !important;
+    padding: 70px; 
+    border-radius: 15px;
+    display: block;
+    width: fit-content;
+    margin: 40px auto;
+    backdrop-filter: blur(40px); 
+    -webkit-backdrop-filter: blur(40px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: center;
+    max-width: 90%;
+    box-sizing: border-box;
+}
+.status-box .error-text {
+    color: #e84040 !important;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+.status-box .sub-message {
+    color: #F5EBE0 !important;
+    font-size: 1.1rem;
+    margin-bottom: 25px;
+}
+.status-box .retry-btn {
+    border: 1.5px solid #ff4949 !important;
+    color: #ff4949 !important;
+    background-color: transparent;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+.status-box .retry-btn:hover {
+    background-color: #F5EBE0 !important;
+}
+@media (max-width: 768px) {
+    .status-box {
+        padding: 20px;
+        width: 95%;
+    }
+    .status-box .error-text {
+        font-size: 1.5rem;
+    }
+    .status-box .sub-message {
+        font-size: 1rem;
+    }
+}
 
 .container {
     max-width: 800px;
@@ -33,4 +107,33 @@ body {
     font-size: 4rem;
     color: #ccc;
     margin-bottom: 20px;
+}
+
+
+
+
+
+
+
+
+.form-control[type="text"] {
+    background-color: rgba(20, 20, 20, 0.7) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    color: #F5EBE0 !important;
+    border-radius: 8px 0 0 8px !important;
+}
+
+.form-control[type="text"]::placeholder {
+    color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.form-control[type="text"]:focus {
+    background-color: rgba(20, 20, 20, 0.9) !important;
+    border-color: #f5ebe070 !important;
+    box-shadow: 0 0 0 0.2rem rgba(245, 235, 224, 0.055) !important;
+    color: #ffffff !important;
+}
+
+.container .btn-primary {
+    border-radius: 0 8px 8px 0 !important; 
 }

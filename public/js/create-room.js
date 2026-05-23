@@ -1,4 +1,7 @@
-
+if (!localStorage.getItem('accessToken')) {
+    alert('Please log in first.');
+    window.location.replace('login.html');
+}
 
 function showToast(message, type = 'success') {
     const toastEl = document.getElementById('appToast');
@@ -44,6 +47,7 @@ window.addEventListener('pageshow', function () {
     rangeValue.innerText = rangeInput.value;
 });
 
+
 const form = document.getElementById('createRoomForm');
 const createBtn = document.getElementById('createBtn');
 
@@ -81,9 +85,8 @@ form.addEventListener('submit', async function (event) {
         }, 1000);
 
     } catch (error) {
-       showToast(error.message || 'Failed to create room. Please try again.', 'error');
+        showToast(error.message || 'Failed to create room. Please try again.', 'error');
     } finally {
-
         createBtn.disabled = false;
         createBtn.innerText = 'Create & Enter';
     }
