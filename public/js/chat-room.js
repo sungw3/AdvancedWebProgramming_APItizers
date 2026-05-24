@@ -83,14 +83,24 @@ function connectWebSocket() {
             });
 
             setTimeout(() => {
+                const emotions = [
+                    'emotion_happy', 'emotion_sad', 'emotion_angry', 
+                    'emotion_fear', 'emotion_surprise', 'emotion_disgust', 'emotion_neutral'
+                ];
+                const randomEmotion = emotions[Math.floor(Math.random() * emotions.length)];
+                
+                const emotionName = randomEmotion.replace('emotion_', '').toUpperCase();
+
                 renderChatMessage({
-                    senderName: '가짜',
-                    message: '프론트엔드 UI 테스트 중이시군요! 아주 잘 작동합니다.',
-                    emotion: 'emotion_happy'
+                    senderName: '봇',
+                    message: ` [ ${emotionName} ] `,
+                    emotion: randomEmotion
                 });
             }, 1000);
         }
     };
+
+
     setTimeout(() => {
         renderChatMessage({
             senderName: 'System',
@@ -99,9 +109,9 @@ function connectWebSocket() {
         });
 
         renderUserList([
-            { name: myName, isOnline: true, lastSeen: new Date().toISOString() },
-            { name: '가짜 유저', isOnline: true, lastSeen: new Date().toISOString() },
-            { name: '오프라인 유저', isOnline: false, lastSeen: new Date(Date.now() - 3600000).toISOString() }
+            { name: 'Apple', isOnline: true, lastSeen: new Date().toISOString() },
+            { name: 'Donald', isOnline: true, lastSeen: new Date().toISOString() },
+            { name: '홍길동', isOnline: false, lastSeen: new Date(Date.now() - 3600000).toISOString() }
         ]);
     }, 500);
 }
@@ -229,3 +239,118 @@ chatForm.addEventListener('submit', function (e) {
 });
 
 connectWebSocket();
+
+
+
+const API_BASE_URL = 'http://127.0.0.1:8000/api';
+
+async function fetchRoomInitialData() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/rooms/${roomId}/`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (!response.ok) throw new Error('Failed to load room data');
+        
+        const data = await response.json();
+        
+        if (data.hostName === myName) {
+            document.getElementById('hostSettingsMenu').style.display = 'block';
+        }
+        if (data.users) renderUserList(data.users);
+
+        if (data.messages) {
+            data.messages.forEach(msg => renderChatMessage(msg));
+        }
+    } catch (error) {
+        console.error(error);
+        showToast('Error loading room data.', 'error');
+    }
+}
+
+
+document.getElementById('deleteRoomBtn')?.addEventListener('click', async (e) => {
+    e.preventDefault();
+    if(!confirm("Warning: Deleting the room will remove all data. Are you sure you want to delete it?")) return;
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/rooms/${roomId}/`, {
+            method: 'DELETE',
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (response.ok) {
+            alert('Room deleted successfully.');
+            window.location.replace('search-room.html');
+        } else {
+            showToast('You do not have permission to delete the room or an error occurred.', 'error');
+        }
+    } catch (error) {
+        console.error(error);
+    }
+});
+
+document.getElementById('delegateHostBtn')?.addEventListener('click', async (e) => {
+    e.preventDefault();
+    const newHostName = prompt("Enter the nickname of the user you want to delegate host privileges to:");
+    if (!newHostName || newHostName === myName) return;
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/rooms/${roomId}/delegate/`, {
+            method: 'POST',
+            headers: { 
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ new_host: newHostName })
+        });
+
+        if (response.ok) {
+            showToast(`${newHostName} is now the host.`);
+            document.getElementById('hostSettingsMenu').style.display = 'none';
+        } else {
+            showToast('Failed to delegate host: User not found or insufficient permissions.', 'error');
+        }
+    } catch (error) {
+        console.error(error);
+    }
+});
+
+fetchRoomInitialData();
+
+
+window.addEventListener('beforeunload', function () {
+    if (socket && isConnected) {
+        const payload = {
+            type: 'leave', 
+            username: myName
+        };
+        socket.send(JSON.stringify(payload));
+        socket.close();
+    }
+
+    const leaveUrl = `${API_BASE_URL}/rooms/${roomId}/leave/`;
+    const data = new Blob([JSON.stringify({ action: 'disconnect' })], { type: 'application/json' });
+    
+    navigator.sendBeacon(leaveUrl, data); 
+});
+
+
+(() => {
+    const themeBtn = document.querySelector('.theme-toggle-btn');
+    if (!themeBtn) return;
+
+    const savedTheme = localStorage.getItem('chatBackgroundTheme');
+    if (savedTheme === 'alt-theme') {
+        document.body.classList.add('bg-theme-alt');
+    }
+
+    themeBtn.addEventListener('click', () => {
+        const isAltTheme = document.body.classList.toggle('bg-theme-alt');
+
+        if (isAltTheme) {
+            localStorage.setItem('chatBackgroundTheme', 'alt-theme');
+        } else {
+            localStorage.removeItem('chatBackgroundTheme');
+        }
+    });
+})();

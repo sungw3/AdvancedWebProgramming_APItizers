@@ -1,37 +1,41 @@
-/* emotion variables that contains the color styles for each emotion */
+.bubble.emotion_happy {
+    background-color: #fae896 !important; 
+    border: 1px solid #e2cf78 !important;
+    color: #4a3c02 !important;
+}
 
-.emotion_happy {
-    background-color: #8cff75 !important;
-    border: 1px solid rgb(133, 255, 2);
-    color: #245d1a;
+.bubble.emotion_sad {
+    background-color: #bad3fc !important; 
+    border: 1px solid #99bbf2 !important;
+    color: #172d4f !important;
 }
-.emotion_sad {
-    background-color: #83e8ff !important;
-    border: 1px solid #5ce1ff;
-    color: #0c94b3;
+
+.bubble.emotion_angry {
+    background-color: #fca9a9 !important; 
+    border: 1px solid #eb8888 !important;
+    color: #5c1414 !important;
 }
-.emotion_angry {
-    background-color: #fd616e !important;
-    border: 1px solid #ff3e4e;
-    color: #510005;
+
+.bubble.emotion_fear {
+    background-color: #cebdfc !important; 
+    border: 1px solid #b39ded !important;
+    color: #311f61 !important;
 }
-.emotion_fear {
-    background-color: #7871ff !important;
-    border: 1px solid #4c42ff;
-    color: #0b0748;
+
+.bubble.emotion_surprise {
+    background-color: #f9be8f !important; 
+    border: 1px solid #e2a574 !important;
+    color: #542704 !important;
 }
-.emotion_surprise {
-    background-color: #5dffd1 !important;
-    border: 1px solid #00e3a2;
-    color: #005f44;
+
+.bubble.emotion_disgust {
+    background-color: #c4d783 !important; 
+    border: 1px solid #a9be64 !important;
+    color: #333d14 !important;
 }
-.emotion_disgust {
-    background-color: #8b2694 !important;
-    border: 1px solid #811e8a;
-    color: #31002d;
-}
-.emotion_neutral {
-    background-color: #e0e0e0 !important;
-    border: 1px solid #d2d2d2;
-    color: #575757;
+
+.bubble.emotion_neutral {
+    background-color: #e9e9e7 !important; 
+    border: 1px solid #d5d5d3 !important;
+    color: #3f3f3f !important;
 }
