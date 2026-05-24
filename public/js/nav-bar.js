@@ -66,7 +66,11 @@ document.addEventListener("DOMContentLoaded", function () {
                         const savedName = localStorage.getItem('userName');
                         const userNicknameEl = document.getElementById('user-nickname');
                         if (savedName && userNicknameEl) {
-                            userNicknameEl.innerText = `${savedName}, Welcome!`;
+                            let displayName = savedName;
+                            if (displayName.length > 12) {
+                                displayName = displayName.substring(0, 12) + '...';
+                            }
+                            userNicknameEl.innerHTML = `${displayName}<br>Welcome!`;
                         }
                     }
                 }
