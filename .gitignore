@@ -9,4 +9,5 @@ __pycache__/
 .env
 
 test.py
+tests/
 marcov_storage.db

@@ -1,5 +1,4 @@
-import mlist
-from collections import deque
+from . import mlist
 
 
 class GlobalMarcov:
