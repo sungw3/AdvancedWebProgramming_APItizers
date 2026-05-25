@@ -25,16 +25,23 @@ newIdInput.addEventListener('blur', async function() {
     if (userId.length < 4) return;
 
     try {
-        await fetchAPI(`/check-id?id=${userId}`);
+        await fetchAPI(`/check-id?id=${encodeURIComponent(userId)}`);
         this.classList.remove('is-invalid');
         this.classList.add('is-valid');
         this.setCustomValidity('');
     } catch (error) {
         this.classList.remove('is-valid');
         this.classList.add('is-invalid');
-        this.setCustomValidity('Already in use');
+        
         const feedbackDiv = this.parentNode.querySelector('.invalid-feedback');
-        if (feedbackDiv) feedbackDiv.innerText = 'This ID is already in use.';
+        
+        if (error.message.toLowerCase().includes('use') || error.message.includes('409')) {
+            this.setCustomValidity('Already in use');
+            if (feedbackDiv) feedbackDiv.innerText = 'This ID is already in use.';
+        } else {
+            this.setCustomValidity('Server error');
+            if (feedbackDiv) feedbackDiv.innerText = 'Unable to check ID. Try again later.';
+        }
     }
 });
 
@@ -82,7 +89,7 @@ signupForm.addEventListener('submit', async function (event) {
     signupBtn.innerText = 'Processing...';
 
     try {
-        const data = await fetchAPI('/signup', {
+        await fetchAPI('/signup', {
             method: 'POST',
             body: JSON.stringify({ nickname: newNick, id: newId, password: newPw })
         });
@@ -93,7 +100,7 @@ signupForm.addEventListener('submit', async function (event) {
         }, 1000);
 
     } catch (error) {
-        showToast('Failed to communicate with the server. Please try again later.', 'error');
+        showToast(error.message || 'Signup failed. Please try again.', 'error');
     } finally {
         signupBtn.disabled = false;
         signupBtn.innerText = 'Sign Up';

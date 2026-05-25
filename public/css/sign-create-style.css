@@ -19,7 +19,6 @@ body::before {
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
-    filter: blur(1px) brightness(0.9);
     z-index: -2;
 }
 
@@ -108,7 +107,8 @@ body::before {
     -webkit-text-fill-color: transparent;
     background-clip: text;
     color: transparent;
-    font-weight: 800;
+
+    font-weight: 1000;
     font-family: 'Helvetica Neue', Arial, sans-serif;
     display: table;
     margin: 0 auto; 
@@ -129,7 +129,6 @@ body::before {
 .register-card a:not(.text-warning),
 .create-room-card a:not(.text-warning) {
     color: #F5EBE0;
-    text-decoration: none;
 }
 
 .login-card a:hover,
@@ -168,20 +167,6 @@ body::before {
     font-weight: bold;
 }
 
-.was-validated #roomSubtitle.form-control:valid {
-    border-color: #dee2e6 !important;
-    background-image: none !important;
-    box-shadow: none !important;
-}
-
-.was-validated .form-check-input:valid {
-    border-color: rgba(0, 0, 0, 0.25) !important;
-}
-
-.was-validated .form-check-input:valid:checked {
-    border-color: #0d6efd !important;
-    background-color: #0d6efd !important;
-}
 
 
 #roomSubtitle {
@@ -217,4 +202,39 @@ body::before {
 .register-card button,
 .create-room-card button {
     margin-top: 10px !important;
+}
+
+
+
+/* ==========================================
+   Create Room page details
+   ========================================== */
+
+.create-room-card .btn-light {
+    background-color: transparent !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    color: #F5EBE0 !important;
+    font-weight: bold;
+}
+
+.create-room-card .btn-light:hover {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    color: #ffffff !important;
+}
+
+.create-room-card .form-range::-webkit-slider-thumb {
+    background: #E6C27A !important;
+}
+.create-room-card .form-range::-moz-range-thumb {
+    background: #E6C27A !important;
+}
+
+.create-room-card .form-check-input:checked {
+    background-color: #E6C27A !important;
+    border-color: #E6C27A !important;
+}
+
+.create-room-card .form-label {
+    margin-top: 10px;
+    margin-bottom: 8px;
 }

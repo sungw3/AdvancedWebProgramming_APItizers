@@ -32,7 +32,6 @@ privateSwitch.addEventListener('change', function () {
     } else {
         passwordArea.style.display = 'none';
         roomPassword.removeAttribute('required');
-        roomPassword.value = "";
     }
 });
 
@@ -46,7 +45,6 @@ window.addEventListener('pageshow', function () {
     }
     rangeValue.innerText = rangeInput.value;
 });
-
 
 const form = document.getElementById('createRoomForm');
 const createBtn = document.getElementById('createBtn');
@@ -63,12 +61,14 @@ form.addEventListener('submit', async function (event) {
     createBtn.disabled = true;
     createBtn.innerText = 'Creating...';
 
+    const isPrivateRoom = document.getElementById('privateSwitch').checked;
+    
     const roomData = {
         title: document.getElementById('roomTitle').value.trim(),
         subtitle: document.getElementById('roomSubtitle').value.trim(),
         maxParticipants: parseInt(document.getElementById('maxParticipants').value, 10),
-        isPrivate: document.getElementById('privateSwitch').checked,
-        password: document.getElementById('privateSwitch').checked ? document.getElementById('roomPassword').value : null
+        isPrivate: isPrivateRoom,
+        password: isPrivateRoom ? document.getElementById('roomPassword').value : null
     };
 
     try {
@@ -80,7 +80,7 @@ form.addEventListener('submit', async function (event) {
         showToast('Room created successfully!', 'success');
         
         setTimeout(() => {
-            const urlSafeTitle = encodeURIComponent(roomData.title);
+            const urlSafeTitle = escapeHTML(encodeURIComponent(roomData.title));
             location.href = `chat-room.html?roomId=${result.roomId}&title=${urlSafeTitle}`;
         }, 1000);
 

@@ -39,7 +39,7 @@ loginForm.addEventListener('submit', async function (event) {
 
         showToast(`Welcome, ${data.userName}!`, 'success');
         setTimeout(() => {
-            window.location.href = 'room-list.html';
+            window.location.href = 'search-room.html'; 
         }, 1000);
 
     } catch (error) {

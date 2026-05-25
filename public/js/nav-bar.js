@@ -3,15 +3,11 @@ document.addEventListener("DOMContentLoaded", function () {
         'index.html': [
             "url('images/bg-index-c5.png')",
             "url('images/bg-index-c6.png')",
-            "url('images/bg-index-c2.png')"
+            "url('images/bg-index-c7.png')"
         ],
         'search-room.html': [
             "url('images/bg-search-c3.png')",
             "url('images/bg-search-c1.png')"
-        ],
-        'create-room.html': [
-            "url('images/bg-create-1.png')",
-            "url('images/bg-create-2.png')"
         ]
     };
 
@@ -20,6 +16,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (currentPageName === 'login.html' || currentPageName === 'signup.html') {
         bgTargetPage = 'index.html';
+    } else if (currentPageName === 'create-room.html') {
+        bgTargetPage = 'search-room.html';
     }
 
     const backgroundImages = pageBackgrounds[bgTargetPage] || pageBackgrounds['index.html'];
@@ -44,14 +42,10 @@ document.addEventListener("DOMContentLoaded", function () {
             .then(data => {
                 navPlaceholder.innerHTML = data;
 
-                const currentPage = window.location.pathname.split('/').pop();
                 const navLinks = document.querySelectorAll('.nav-link');
-
                 navLinks.forEach(link => {
                     const linkHref = link.getAttribute('href');
-                    if (linkHref === currentPage) {
-                        link.classList.add('active');
-                    } else if (currentPage === '' && linkHref === 'index.html') {
+                    if (linkHref === currentPageName || (currentPageName === 'index.html' && linkHref === 'index.html')) {
                         link.classList.add('active');
                     }
                 });
@@ -67,8 +61,18 @@ document.addEventListener("DOMContentLoaded", function () {
                         userSection.style.display = 'block';
                         const savedName = localStorage.getItem('userName');
                         const userNicknameEl = document.getElementById('user-nickname');
+                        
                         if (savedName && userNicknameEl) {
-                            userNicknameEl.innerText = `${savedName}, Welcome!`;
+                            let displayName = savedName;
+                            if (displayName.length > 12) {
+                                displayName = displayName.substring(0, 12) + '...';
+                            }
+                            
+                            const safeName = displayName.replace(/[&<>'"]/g, function (tag) {
+                                const charsToReplace = { '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' };
+                                return charsToReplace[tag] || tag;
+                            });
+                            userNicknameEl.innerHTML = `${safeName}<br>Welcome!`;
                         }
                     }
                 }
@@ -78,9 +82,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (logoutBtn) {
                     logoutBtn.addEventListener('click', function (event) {
                         event.preventDefault();
-                        localStorage.clear();
-                        alert('Logged out successfully.');
-                        window.location.href = 'index.html';
+                        
+                        localStorage.removeItem('isLoggedIn');
+                        localStorage.removeItem('accessToken');
+                        localStorage.removeItem('userName');
+                        
+                        window.location.replace('index.html'); 
                     });
                 }
 

@@ -1,15 +1,19 @@
 async function fetchAPI(endpoint, options = {}) {
     const token = localStorage.getItem('accessToken');
+    
+    // FormData 전송 시에는 브라우저가 자동으로 Content-Type과 boundary를 설정하도록 분기 처리
+    const isFormData = options.body instanceof FormData;
     const headers = {
-        'Content-Type': 'application/json',
+        ...(!isFormData && { 'Content-Type': 'application/json' }),
         ...(token && { 'Authorization': `Bearer ${token}` }),
         ...options.headers
     };
 
+
+    const safeEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+
     try {
-        // endpoint가 '/login' 이면 브라우저가 알아서 '/api/login'으로 요청하는 방식.
-        // if endpoint starts with '/login', fetch will automatically prepend '/api' to the request URL.
-        const response = await fetch(`/api${endpoint}`, {
+        const response = await fetch(`/api${safeEndpoint}`, {
             ...options,
             headers
         });

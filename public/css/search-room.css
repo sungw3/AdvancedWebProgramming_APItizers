@@ -83,6 +83,7 @@ body::before {
 }
 
 .room-card {
+    background-color: #F5EBE0 !important;
     transition: transform 0.2s;
     cursor: pointer;
 }
@@ -136,4 +137,27 @@ body::before {
 
 .container .btn-primary {
     border-radius: 0 8px 8px 0 !important; 
+}
+
+
+.pagination .page-link {
+    background-color: #F5EBE0 !important;
+    border-color: rgba(45, 18, 18, 0.1) !important;
+    color: #2D1212 !important;
+    box-shadow: none !important;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #2D1212 !important;
+    border-color: #2D1212 !important;
+    color: #F5EBE0 !important;
+}
+
+.pagination .page-link:hover {
+    background-color: #ebdccb !important;
+    color: #000000 !important;
+}
+
+.pagination {
+    justify-content: center !important;
 }

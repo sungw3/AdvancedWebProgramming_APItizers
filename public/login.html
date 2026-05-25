@@ -13,7 +13,9 @@
 
     <div class="card shadow-sm login-card">
         <div class="card-body">
-            <h3 class="rainbow-text text-center mb-4">Chatting with Emotion</h3>
+            <h3 class="text-center mb-4">
+                <a href="index.html" class="rainbow-text text-decoration-none">Chatting with Emotion</a>
+            </h3>
             <br>
 
             <form id="loginForm" class="needs-validation" novalidate>
@@ -34,22 +36,23 @@
                 </div>
             </form>
 
-            <div class="text-center mt-3">
-                <br><br>
-                <a href="signup.html" class="text-decoration-none small">Create a new account</a>
+            <div class="text-center mt-5">
+                <a href="signup.html" class="small">Create a new account</a>
             </div>
 
             <div class="text-center mt-4">
-                <a href="index.html" class="text-decoration-none small">Go back to Home</a>
+                <a href="index.html" class="small">Home</a>
             </div>
         </div>
     </div>
 
     <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1055;">
-        <div id="appToast" class="toast align-items-center text-bg-primary border-0" role="alert" aria-live="assertive" aria-atomic="true">
+        <div id="appToast" class="toast align-items-center text-bg-primary border-0" role="alert" aria-live="assertive"
+            aria-atomic="true">
             <div class="d-flex">
                 <div class="toast-body" id="toastMessage"></div>
-                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                    aria-label="Close"></button>
             </div>
         </div>
     </div>

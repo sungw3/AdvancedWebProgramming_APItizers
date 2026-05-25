@@ -2,8 +2,8 @@ function showToast(message, type = 'success') {
     const toastEl = document.getElementById('appToast');
     const toastMessage = document.getElementById('toastMessage');
     toastMessage.innerText = message;
-    toastEl.className = type === 'error' 
-        ? 'toast align-items-center text-bg-danger border-0' 
+    toastEl.className = type === 'error'
+        ? 'toast align-items-center text-bg-danger border-0'
         : 'toast align-items-center text-bg-success border-0';
     const toast = new bootstrap.Toast(toastEl, { delay: 3000 });
     toast.show();
@@ -11,7 +11,7 @@ function showToast(message, type = 'success') {
 
 function escapeHTML(str) {
     if (!str) return '';
-    return String(str).replace(/[&<>'"]/g, function(tag) {
+    return String(str).replace(/[&<>'"]/g, function (tag) {
         const charsToReplace = {
             '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
         };
@@ -22,7 +22,7 @@ function escapeHTML(str) {
 const itemsPerPage = 20;
 let currentPage = 1;
 let currentSearchQuery = "";
-let isFetching = false; 
+let isFetching = false;
 
 function enterRoom(roomId, urlSafeTitle) {
     if (!localStorage.getItem('accessToken')) {
@@ -30,7 +30,7 @@ function enterRoom(roomId, urlSafeTitle) {
         setTimeout(() => {
             window.location.href = 'login.html';
         }, 1500);
-        
+
         return;
     }
     window.location.href = `chat-room.html?roomId=${roomId}&title=${urlSafeTitle}`;
@@ -39,7 +39,7 @@ function enterRoom(roomId, urlSafeTitle) {
 
 async function fetchAndRenderRooms(page, searchQuery = "") {
     if (isFetching) return;
-    isFetching = true; 
+    isFetching = true;
 
     const container = document.getElementById('room-list');
     const emptyState = document.getElementById('empty-state');
@@ -48,7 +48,7 @@ async function fetchAndRenderRooms(page, searchQuery = "") {
 
     container.innerHTML = `<div class="text-center my-5"><div class="spinner-border text-primary" role="status"></div></div>`;
     emptyState.style.display = "none";
-    if(errorState) errorState.style.display = "none";
+    if (errorState) errorState.style.display = "none";
     paginationNav.style.display = "none";
 
     try {
@@ -57,17 +57,17 @@ async function fetchAndRenderRooms(page, searchQuery = "") {
             limit: itemsPerPage,
             search: searchQuery
         });
-        
+
         const responseData = await fetchAPI(`/rooms?${queryParams.toString()}`);
-        
+
         const rooms = responseData.rooms || [];
         const totalRooms = responseData.totalRooms || 0;
 
-        container.innerHTML = ""; 
+        container.innerHTML = "";
 
         if (rooms.length === 0) {
             emptyState.style.display = "block";
-            isFetching = false; 
+            isFetching = false;
             return;
         }
 
@@ -76,7 +76,7 @@ async function fetchAndRenderRooms(page, searchQuery = "") {
         rooms.forEach(room => {
             const safeTitle = escapeHTML(room.title);
             const safeHost = escapeHTML(room.host);
-            const urlSafeTitle = encodeURIComponent(room.title); 
+            const urlSafeTitle = escapeHTML(encodeURIComponent(room.title));
 
             container.innerHTML += `
                 <div class="card mb-3 room-card shadow-sm" onclick="enterRoom('${room.id}', '${urlSafeTitle}')">
@@ -98,12 +98,12 @@ async function fetchAndRenderRooms(page, searchQuery = "") {
 
     } catch (error) {
         container.innerHTML = "";
-        emptyState.style.display = "none"; 
-        
-        if(errorState) errorState.style.display = "block";
+        emptyState.style.display = "none";
+
+        if (errorState) errorState.style.display = "block";
         showToast('Failed to load room list. Please try again.', 'error');
     } finally {
-        isFetching = false; 
+        isFetching = false;
     }
 }
 
@@ -128,18 +128,18 @@ function renderPagination(totalPages, current) {
 }
 
 function changePage(page, event) {
-    if(event) event.preventDefault(); 
-    if(isFetching) return; 
+    if (event) event.preventDefault();
+    if (isFetching) return;
     currentPage = page;
     fetchAndRenderRooms(currentPage, currentSearchQuery);
-    window.scrollTo(0, 0); 
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function searchRooms() {
-    if(isFetching) return; 
+    if (isFetching) return;
     const searchInput = document.getElementById('searchInput');
     currentSearchQuery = searchInput.value.trim();
-    currentPage = 1; 
+    currentPage = 1;
     fetchAndRenderRooms(currentPage, currentSearchQuery);
 }
 
