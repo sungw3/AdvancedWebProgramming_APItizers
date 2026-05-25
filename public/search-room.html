@@ -29,17 +29,13 @@
 
         <div id="room-list"></div>
 
-        <div id="empty-state" class="text-center" style="display: none;">
-            <div class="empty-icon" style="font-size: 3rem;">💬</div>
+        <div id="empty-state" class="text-center empty-box" style="display: none;">
+            <div class="empty-icon">💬</div>
             <h4>Currently no rooms available.</h4>
-            <p class="text-muted">Be the first to create the room!</p>
-            <button class="btn btn-success mt-3" onclick="location.href='create-room.html'">create new room</button>
+            <p class="text-muted-custom">Be the first to create the room!</p>
+            <button class="btn btn-primary mt-3" onclick="location.href='create-room.html'">Create New Room</button>
         </div>
-        <div class="status-box">
-            <h2 class="error-text">Failed to load room list</h2>
-            <p class="sub-message">Cannot connect to the server.</p><br>
-            <a href="#" class="retry-btn" onclick="location.reload()">Retry</a>
-        </div>
+        
 
         <nav aria-label="Page navigation" class="mt-5" id="pagination-nav">
             <ul class="pagination justify-content-center" id="pagination-list"></ul>

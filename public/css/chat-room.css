@@ -64,7 +64,7 @@ body.bg-theme-alt {
     outline: none !important;
     box-shadow: none !important;
     padding: 0 !important;
-    margin-right: 0px !important;
+    margin-left: 5px !important;
     color: #F5EBE0 !important; 
     font-size: 1.3rem;
     display: inline-flex; 
@@ -204,7 +204,7 @@ body.bg-theme-alt .sender-name {
     padding: 10px 15px;
     border-radius: 18px;
     position: relative;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
     color: #1a1a1a; 
     
     width: fit-content; 
@@ -293,4 +293,64 @@ body.bg-theme-alt .sender-name {
 
 .offcanvas-header .btn-close {
     filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+.chat-main {
+    overflow-x: hidden !important; 
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.message-row {
+    width: 100%;
+    box-sizing: border-box !important;
+}
+
+@media (max-width: 1000px) {
+    .message-row > div {
+        max-width: 85% !important;
+    }
+    .chat-messages {
+        padding: 15px 10px !important;
+    }
+}
+
+/* ==========================================
+   Empty room state
+   ========================================== */
+
+.empty-box {
+    background-color: rgba(0, 0, 0, 0.7) !important; 
+    padding: 60px 40px !important;
+    border-radius: 15px;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    
+    max-width: 500px;
+    margin: 60px auto !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+.empty-box h4 {
+    color: #F5EBE0 !important; 
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.text-muted-custom {
+    color: rgba(245, 235, 224, 0.6) !important; 
+    font-size: 1rem;
+}
+
+.empty-icon {
+    font-size: 4.5rem !important; 
+    margin-bottom: 20px;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.2); 
+}
+
+.empty-box .btn-primary {
+    border-radius: 6px !important; 
+    padding: 10px 24px !important;
+    font-weight: bold;
 }

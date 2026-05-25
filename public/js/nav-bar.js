@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", function () {
         'index.html': [
             "url('images/bg-index-c5.png')",
             "url('images/bg-index-c6.png')",
-            "url('images/bg-index-c2.png')"
+            "url('images/bg-index-c7.png')"
         ],
         'search-room.html': [
             "url('images/bg-search-c3.png')",

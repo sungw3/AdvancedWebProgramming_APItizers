@@ -65,7 +65,7 @@ async function fetchAndRenderRooms(page, searchQuery = "") {
             rooms: [
                 {
                     id: "room_test_001",
-                    title: "Test Room with bot.",
+                    title: "My First Room",
                     host: "FrontendDev",
                     count: 1,
                     max: 10

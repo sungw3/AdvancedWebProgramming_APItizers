@@ -89,10 +89,10 @@ function connectWebSocket() {
                 ];
                 const randomEmotion = emotions[Math.floor(Math.random() * emotions.length)];
                 
-                const emotionName = randomEmotion.replace('emotion_', '').toUpperCase();
+                const emotionName = randomEmotion.replace('emotion_', '');
 
                 renderChatMessage({
-                    senderName: '봇',
+                    senderName: '',
                     message: ` [ ${emotionName} ] `,
                     emotion: randomEmotion
                 });
@@ -102,16 +102,12 @@ function connectWebSocket() {
 
 
     setTimeout(() => {
-        renderChatMessage({
-            senderName: 'System',
-            message: 'front end testing chatting room.',
-            emotion: 'emotion_neutral'
-        });
+        
 
         renderUserList([
-            { name: 'Apple', isOnline: true, lastSeen: new Date().toISOString() },
+            { name: 'Jake', isOnline: true, lastSeen: new Date().toISOString() },
             { name: 'Donald', isOnline: true, lastSeen: new Date().toISOString() },
-            { name: '홍길동', isOnline: false, lastSeen: new Date(Date.now() - 3600000).toISOString() }
+            { name: 'Sol', isOnline: false, lastSeen: new Date(Date.now() - 3600000).toISOString() }
         ]);
     }, 500);
 }
