@@ -1,0 +1,60 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Chatting with Emotion</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="{% static 'css/sign-create-style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/nav-bar.css' %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+<body class="bg-light min-vh-100 d-flex flex-column align-items-center justify-content-center">
+    <div class="card shadow-sm login-card">
+        <div class="card-body">
+            <h3 class="text-center mb-4">
+                <a href="{% url 'home' %}" class="rainbow-text text-decoration-none">Chatting with Emotion</a>
+            </h3>
+            <br>
+            <form id="loginForm" class="needs-validation" novalidate>
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="userId" class="form-label">ID</label>
+                    <input type="text" class="form-control" id="userId" required>
+                    <div class="invalid-feedback text-start">Please enter your ID</div>
+                </div>
+                <div class="mb-3">
+                    <label for="userPw" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="userPw" required>
+                    <div class="invalid-feedback text-start">Please enter your password</div>
+                </div>
+                <div class="d-grid gap-2">
+                    <button type="submit" id="loginBtn" class="btn btn-primary">Enter</button>
+                </div>
+            </form>
+            <div class="text-center mt-5">
+                <a href="{% url 'signup' %}" class="small">Create a new account</a>
+            </div>
+            <div class="text-center mt-4">
+                <a href="{% url 'home' %}" class="small">Home</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1055;">
+        <div id="appToast" class="toast align-items-center text-bg-primary border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body" id="toastMessage"></div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'js/api.js' %}"></script>
+    <script src="{% static 'js/nav-bar.js' %}"></script>
+    <script src="{% static 'js/login.js' %}"></script>
+</body>
+</html>
