@@ -15,15 +15,15 @@
 <body>
 
     <div id="nav-placeholder"></div>
-    <script src="js/nav-bar.js"></script>
 
     <div class="container mb-5">
         <div class="row mb-5 justify-content-center">
             <div class="col-md-8">
-                <div class="input-group shadow-sm">
-                    <input type="text" id="searchInput" class="form-control" placeholder="Search room by name">
-                    <button class="btn btn-primary" type="button" onclick="searchRooms()">Search</button>
-                </div>
+                <form class="input-group shadow-sm" onsubmit="event.preventDefault(); searchRooms();">
+                    <input type="search" id="searchInput" class="form-control" placeholder="Search room by name"
+                        autocomplete="off">
+                    <button class="btn btn-primary" type="submit">Search</button>
+                </form>
             </div>
         </div>
 
@@ -35,7 +35,11 @@
             <p class="text-muted-custom">Be the first to create the room!</p>
             <button class="btn btn-primary mt-3" onclick="location.href='create-room.html'">Create New Room</button>
         </div>
-        
+        <div class="status-box">
+            <h2 class="error-text">Failed to load room list</h2>
+            <p class="sub-message">Cannot connect to the server.</p><br>
+            <a href="#" class="retry-btn" onclick="location.reload()">Retry</a>
+        </div>
 
         <nav aria-label="Page navigation" class="mt-5" id="pagination-nav">
             <ul class="pagination justify-content-center" id="pagination-list"></ul>
@@ -53,8 +57,9 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="js/search-room.js"></script>
     <script src="js/api.js"></script>
+    <script src="js/nav-bar.js"></script>
+    <script src="js/search-room.js"></script>
 
 </body>
 

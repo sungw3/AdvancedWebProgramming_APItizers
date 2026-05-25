@@ -1,6 +1,7 @@
 body {
     font-family: sans-serif;
     background: #f9f9f9;
+    background-color: #1a1a1a;
 }
 body::before {
     content: "";

@@ -10,6 +10,7 @@ body {
     background-position: center !important;
     background-repeat: no-repeat !important;
     background-attachment: fixed !important;
+    background-color: #1a1a1a;
 }
 
 
@@ -268,6 +269,9 @@ body.bg-theme-alt .sender-name {
 
 @media (max-width: 768px) {
     .user-sidebar { display: none; }
+    body {
+        overflow-y: auto;
+    }
 }
 
 /* ==========================================
