@@ -6,7 +6,9 @@ server.py 파일 안에 있는 app이라는 비동기 애플리케이션 객체�
 
 현재(06/04) 회원가입/로그인 후 서로 다른 두 계정으로 실시간 채팅이 가능하며, 기존 팀원들이 만들어둔 모든 기능 이용 가능합니다.
 하지만 아직 mood engine이 제대로 적용되지 않으며, 온라인/오프라인 버그, ui버그, 방 pw 및 방장 권한 버그 등등 자잘한 버그를 고쳐나가는 중입니다.
+
 -----------------------------------------------------------------------------------------------------------------------------------------------------
+
 Here, we are integrating the frontend with mood-engine and currently modifying the final web page.
 
 We were originally integrating using daphne, but due to the complexity and tangled code, we are reintegrating using a new uvicorn server. Although both are asynchronous web servers, uvicorn is faster than the existing daphne. It is being developed more smoothly because it directly interacts with the asynchronous application object named 'app' within the server.py file.
