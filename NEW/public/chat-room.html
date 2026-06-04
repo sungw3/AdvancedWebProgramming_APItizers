@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatting Room - Chatting with Emotion</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+    <link rel="stylesheet" href="css/mood-color.css">
+    <link rel="stylesheet" href="css/chat-room.css">
+</head>
+
+<body>
+    <div class="chat-wrapper pt-0 mt-0">
+        <aside class="user-sidebar p-3 d-none d-md-block">
+            <div class="mb-4 border-bottom pb-3">
+                <a href="search-room.html" class="text-decoration-none">
+                    <h5 class="fw-bold mb-0" style="letter-spacing: -0.5px;">Chatting with Emotion</h5>
+                </a>
+            </div>
+
+            <h6 class="fw-bold mb-3">Members <span id="memberCount">4</span></h6>
+            <div id="online-members" class="mb-4">
+                <small class="text-uppercase fw-bold d-block mb-2">Online</small>
+                <div class="d-flex align-items-center mb-2">
+                    <span class="status-dot online-dot"></span> <span class="fw-bold" id="my-sidebar-name">Me</span>
+                </div>
+            </div>
+        </aside>
+
+        <main class="chat-main">
+            <div class="chat-header">
+                <div>
+                    <h5 id="room-title" class="mb-0 fw-bold">Loading...</h5>
+                </div>
+
+                <div class="d-flex align-items-center">
+                    <button class="btn btn-light d-md-none border me-2" type="button" data-bs-toggle="offcanvas"
+                        data-bs-target="#userListOffcanvas">
+                        <i class="bi bi-people-fill"></i>
+                    </button>
+
+                    <div class="dropdown me-3" id="hostSettingsMenu" style="display: none;">
+                        <button class="btn btn-outline-light btn-sm dropdown-toggle" type="button"
+                            data-bs-toggle="dropdown">
+                            <i class="bi bi-gear-fill"></i>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item text-light" href="#" id="delegateHostBtn">Give Host</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item text-danger fw-bold" href="#" id="deleteRoomBtn">Delete Room
+                                    Permanently</a></li>
+                        </ul>
+                    </div>
+
+                    <button class="theme-toggle-btn" type="button">
+                        <i class="bi bi-moon-fill"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="chat-messages" id="chatContainer">
+                <div class="text-center text-muted my-auto" id="loadingChat">
+                    Connecting to server...
+                </div>
+            </div>
+
+            <div class="chat-input-area">
+                <form id="chatForm" class="d-flex gap-2">
+                    <input type="text" id="messageInput" class="form-control rounded-pill px-4"
+                    placeholder="Type a message..." autocomplete="off" inputmode="text">
+                    <button type="submit" class="btn btn-primary rounded-pill px-4" id="sendBtn">
+                        <i class="bi bi-send-fill"></i> Send
+                    </button>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="userListOffcanvas">
+        <div class="offcanvas-header border-bottom">
+            <a href="search-room.html" class="text-decoration-none text-dark">
+                <h5 class="offcanvas-title fw-bold">Chatting with Emotion</h5>
+            </a>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+        </div>
+        <div class="offcanvas-body">
+        </div>
+    </div>
+
+    <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1055;">
+        <div id="appToast" class="toast align-items-center text-bg-primary border-0" role="alert" aria-live="assertive"
+            aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body" id="toastMessage"></div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                    aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="api.js"></script>
+    <script src="js/chat-room.js"></script>
+</body>
+
+</html>
