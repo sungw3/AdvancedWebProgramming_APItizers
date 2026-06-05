@@ -11,7 +11,7 @@ from typing import Optional, Dict, Any
 from pathlib import Path
 import sys
 
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Depends, HTTPException, Query
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Depends, HTTPException, Query, Body
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -150,7 +150,7 @@ async def signup(data: SignupRequest):
         "password": hash_password(data.password),
         "created_at": datetime.now().isoformat()
     }
-    save_users()                    # ← 회원가입 시 저장
+    save_users()
     return {"message": "회원가입 성공"}
 
 @app.post("/api/login")
@@ -168,8 +168,13 @@ async def list_rooms(page: int = 1, limit: int = 20, search: str = ""):
     for rid, r in rooms_db.items():
         if not q or q in r.get("title","").lower() or q in str(r.get("host","")).lower():
             filtered.append({
-                "id": rid, "title": r.get("title"), "host": r.get("host"),
-                "count": r.get("count", len(r.get("participants", {}))), "max": r.get("max_participants", 6)
+                "id": rid,
+                "title": r.get("title"),
+                "subtitle": r.get("subtitle", ""),          # ← subtitle 추가
+                "host": r.get("host"),
+                "count": r.get("count", len(r.get("participants", {}))),
+                "max": r.get("max_participants", 6),
+                "is_private": r.get("is_private", False)
             })
     filtered.sort(key=lambda x: rooms_db.get(x["id"],{}).get("created_at",""), reverse=True)
     start = (page-1)*limit
@@ -180,13 +185,35 @@ async def create_room(data: CreateRoomRequest, user=Depends(get_current_user)):
     rid = str(uuid.uuid4())[:8]
     nick = user["nickname"]
     rooms_db[rid] = {
-        "id": rid, "title": data.title, "subtitle": data.subtitle or "",
-        "host": nick, "max_participants": data.maxParticipants,
-        "is_private": data.isPrivate, "password": data.password if data.isPrivate else None,
-        "count": 1, "created_at": datetime.now().isoformat(),
-        "messages": [], "participants": {nick: {"is_online": False, "last_seen": None}}
+        "id": rid,
+        "title": data.title,
+        "subtitle": data.subtitle or "",
+        "host": nick,
+        "max_participants": data.maxParticipants,
+        "is_private": data.isPrivate,
+        "password": data.password if data.isPrivate else None,
+        "count": 1,
+        "created_at": datetime.now().isoformat(),
+        "messages": [],
+        "participants": {nick: {"is_online": False, "last_seen": None}}
     }
     return {"roomId": rid, "status": "success"}
+
+# === 비밀번호 검증 엔드포인트 ===
+@app.post("/api/rooms/{room_id}/verify-password/")
+async def verify_room_password(room_id: str, password: str = Body(..., embed=True)):
+    if room_id not in rooms_db:
+        raise HTTPException(404, "방을 찾을 수 없습니다")
+
+    room = rooms_db[room_id]
+
+    if not room.get("is_private", False):
+        return {"valid": True}
+
+    if room.get("password") == password:
+        return {"valid": True}
+    else:
+        raise HTTPException(401, "비밀번호가 틀렸습니다.")
 
 @app.get("/api/rooms/{room_id}/")
 async def get_room(room_id: str, user=Depends(get_current_user)):
@@ -275,7 +302,7 @@ app.mount("/", StaticFiles(directory="public", html=True), name="static")
 # ==================== Startup ====================
 @app.on_event("startup")
 async def startup_event():
-    load_users()   # ← 회원 정보 불러오기
+    load_users()
 
     mood_mode = "DeepSeek LLM (실제)" if USE_REAL_MOOD_ENGINE else "간단 키워드 분석 (데모)"
     print("\n" + "="*65)

@@ -24,13 +24,14 @@ let currentPage = 1;
 let currentSearchQuery = "";
 let isFetching = false;
 
-// 페이지 로드 시 에러 박스 강제로 숨김 (가장 중요)
+const API_BASE_URL = `${window.location.protocol}//${window.location.host}/api`;
+
 document.addEventListener('DOMContentLoaded', () => {
     const errorState = document.getElementById('error-state');
     if (errorState) errorState.style.display = "none";
 });
 
-function enterRoom(roomId, urlSafeTitle) {
+async function enterRoom(roomId, urlSafeTitle, isPrivate = false) {
     if (!localStorage.getItem('accessToken')) {
         showToast('Please log in to enter the room.', 'error');
         setTimeout(() => {
@@ -38,6 +39,43 @@ function enterRoom(roomId, urlSafeTitle) {
         }, 1500);
         return;
     }
+
+    if (isPrivate) {
+        const inputPassword = prompt("이 방은 비밀번호가 필요합니다.\n비밀번호를 입력해주세요:");
+        if (!inputPassword) return;
+
+        try {
+            const token = localStorage.getItem('accessToken');
+            const response = await fetch(`${API_BASE_URL}/rooms/${roomId}/verify-password/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ password: inputPassword })
+            });
+
+            if (!response.ok) {
+                if (response.status === 401) {
+                    alert("비밀번호가 틀렸습니다.");
+                } else {
+                    alert("오류가 발생했습니다. 다시 시도해주세요.");
+                }
+                return;
+            }
+
+            const result = await response.json();
+            if (!result.valid) {
+                alert("비밀번호가 틀렸습니다.");
+                return;
+            }
+
+        } catch (error) {
+            alert("비밀번호 확인 중 오류가 발생했습니다.");
+            return;
+        }
+    }
+
     window.location.href = `chat-room.html?roomId=${roomId}&title=${urlSafeTitle}`;
 }
 
@@ -69,7 +107,6 @@ async function fetchAndRenderRooms(page, searchQuery = "") {
 
         container.innerHTML = "";
 
-        // 성공했을 때 다시 한 번 확실히 숨김
         if (errorState) errorState.style.display = "none";
 
         if (rooms.length === 0) {
@@ -84,15 +121,19 @@ async function fetchAndRenderRooms(page, searchQuery = "") {
             const safeTitle = escapeHTML(room.title);
             const safeHost = escapeHTML(room.host);
             const urlSafeTitle = escapeHTML(encodeURIComponent(room.title));
+            const isPrivate = room.is_private || false;
 
             container.innerHTML += `
-                <div class="card mb-3 room-card shadow-sm" onclick="enterRoom('${room.id}', '${urlSafeTitle}')">
-                    <div class="card-body d-flex justify-content-between align-items-center">
-                        <div>
-                            <h5 class="card-title mb-1">${safeTitle}</h5>
+                <div class="card mb-3 room-card shadow-sm" 
+                     onclick="enterRoom('${room.id}', '${urlSafeTitle}', ${isPrivate})">
+                    <div class="card-body">
+                        <h5 class="card-title mb-1">${safeTitle}</h5>
+                        
+                        <!-- Subtitle 표시 -->
+                        ${room.subtitle ? `<p class="card-text text-muted mb-2 small">${escapeHTML(room.subtitle)}</p>` : ''}
+                        
+                        <div class="d-flex justify-content-between align-items-center">
                             <p class="card-text text-muted mb-0 small">Host: <strong>${safeHost}</strong></p>
-                        </div>
-                        <div class="text-end">
                             <span class="badge rounded-pill badge-count text-white">${room.count} / ${room.max}</span>
                         </div>
                     </div>
