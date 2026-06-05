@@ -11,7 +11,7 @@ server.py 파일 안에 있는 app이라는 비동기 애플리케이션 객체�
 
 
 (06/05) 코드 수정 후 실시간 채팅에서 정상적으로 mood engine과 메세지 색상 변경을 확인했고, 온/오프라인 동작 버그 및 ui 버그를 수정했습니다.
-앞으로 '방 pw 설정/방장 권한/오프라인 시간' 등의 버그 수정과 '유저 계정 탈퇴' 기능 추가 예정입니다.
+앞으로 '방 pw 설정/방장 권한/오프라인 시간' 등의 버그 수정과 '유저 계정 탈퇴/방 나가기' 기능 추가 예정입니다.
 
 
 
@@ -27,4 +27,4 @@ Although both are asynchronous web servers, uvicorn is faster than the existing 
 
 However, the mood engine is not yet properly implemented, and we are currently fixing minor bugs, including those related to online/offline functionality, UI issues, room passwords, and host permissions.
 
-(06/05) After modifying the code, we confirmed that the mood engine and message color changes work correctly in real-time chat, and fixed the on/offline behavior bugs as well as UI bugs. We plan to fix bugs related to 'room password settings, host permissions, and offline time,' and add a 'user account deletion' feature in the future.
+(06/05) After modifying the code, we confirmed that the mood engine and message color changes work correctly in real-time chat, and fixed the on/offline behavior bugs as well as UI bugs. We plan to fix bugs related to 'room password settings, host permissions, and offline time,' and add a 'user account deletion, exit room' features in the future.
