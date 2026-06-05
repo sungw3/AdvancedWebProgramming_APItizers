@@ -10,7 +10,7 @@ server.py 파일 안에 있는 app이라는 비동기 애플리케이션 객체�
 하지만 아직 mood engine이 제대로 적용되지 않으며, 온라인/오프라인 버그, ui버그, 방 pw 및 방장 권한 버그 등등 자잘한 버그를 고쳐나가는 중입니다.
 
 
-(06/05) mood-engine 작동 및 적용, 온/오프라인 동작, ui 버그 수정, 방 subtitle/pw/최대인원수 적용, 방장 위임 권한 적용 완료.
+(06/05) mood-engine 작동 및 적용, 온/오프라인 동작 수정, ui 버그 수정, 방 subtitle/pw/최대인원수 동작 수정, 방장 위임 권한 적용 완료.
 앞으로 '오프라인 시간' 버그 확인 수정 및 '유저 계정 탈퇴/방 나가기' 기능 추가 예정.
 
 
@@ -27,6 +27,6 @@ Although both are asynchronous web servers, uvicorn is faster than the existing 
 
 However, the mood engine is not yet properly implemented, and we are currently fixing minor bugs, including those related to online/offline functionality, UI issues, room passwords, and host permissions.
 
-(06/05) Mood-engine enabled and applied, On/Offline functionality fixed, UI bugs fixed, and room subtitle and password corrections completed.
+(06/05) Mood-engine operational and applied, On/Offline behavior fixed, UI bugs fixed, Room subtitle/password/max-player behavior fixed, Room host delegation authority applied.
 
-Upcoming bug fixes for 'Room Max Capacity Setting/Host Authority/Offline Time' and the addition of 'User Account Deletion/Leave Room' features are planned.
+Upcoming projects include verifying and fixing 'Offline Time' bugs and adding 'User Account Deletion/Leave Room' features.
