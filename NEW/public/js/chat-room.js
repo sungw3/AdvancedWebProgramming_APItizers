@@ -77,7 +77,6 @@ function connectWebSocket() {
             document.getElementById('loadingChat').innerText = 'Connected! Ready to chat.';
             setTimeout(() => { document.getElementById('loadingChat').style.display = 'none'; }, 1000);
 
-            // ★ WebSocket 연결 성공 후에 초기 데이터 가져오기 (핵심 수정)
             fetchRoomInitialData();
         };
 
@@ -87,7 +86,7 @@ function connectWebSocket() {
                 const chatData = {
                     senderName: data.username,
                     message: data.message,
-                    emotion: data.emotion || 'emotion_neutral'
+                    emotion: data.emotion || 'neutral'
                 };
                 renderChatMessage(chatData);
             }
@@ -117,7 +116,12 @@ function renderChatMessage(data) {
     const isMe = data.senderName === myName;
     const safeText = escapeHTML(data.message);
     const safeSender = escapeHTML(data.senderName);
-    const emotionClass = escapeHTML(data.emotion) || 'emotion_neutral';
+
+    // 감정 클래스 정규화 (핵심 수정)
+    let rawEmotion = data.emotion || 'neutral';
+    const emotionClass = rawEmotion.startsWith('emotion_') 
+        ? rawEmotion 
+        : `emotion_${rawEmotion.toLowerCase()}`;
 
     const messageHtml = `
         <div class="message-row ${isMe ? 'me' : 'other'}">
@@ -254,9 +258,6 @@ document.getElementById('delegateHostBtn')?.addEventListener('click', async (e) 
         console.error(error);
     }
 });
-
-// ★ 기존에 있던 fetchRoomInitialData() 호출은 제거했습니다.
-//    이제 WebSocket onopen 안에서 호출됩니다.
 
 window.addEventListener('beforeunload', function () {
     if (socket && isConnected) {
