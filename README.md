@@ -1,6 +1,6 @@
 
 # 26-1학기 고급웹프로그래밍 프로젝트 (Advanced Web Programming Project 26-1)
-django를 이용하여 챗 웹 구현하기 + llm을 이용한 채팅 감정 분석과 그에 따른 디자인
+uvicorn를 이용하여 챗 웹 구현하기 + llm을 이용한 채팅 감정 분석과 그에 따른 디자인
 
 
 ## 주요기능 (critical features)
@@ -11,12 +11,14 @@ django를 이용하여 챗 웹 구현하기 + llm을 이용한 채팅 감정 분
 
 ## 배포계획 (roadmap)
   - Currently, front/backend separated for development & test.
-  - Later, frontend integrate into Django server. 
+  - Later, frontend integrate into uvicorn server. 
 
 
-  > All HTML files moves to -> Django templates/ directory
+  > All HTML files moves to -> uvicorn templates/ directory
 
-  > All JS, CSS, PNG (static files) moves to -> Django static/ directory
+  > All JS, CSS, PNG (static files) moves to -> uvicorn static/ directory
+> 
+
 
 ## 프론트 (frontend)
 - ux/ui design (with bootstrap v5)
