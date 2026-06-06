@@ -13,6 +13,9 @@ server.py 파일 안에 있는 app이라는 비동기 애플리케이션 객체�
 (06/05) mood-engine 작동 및 적용, 온/오프라인 동작 수정, ui 버그 수정, 방 subtitle/pw/최대인원수 동작 수정, 방장 위임 권한 적용 완료.
 앞으로 '오프라인 시간' 버그 확인 수정 및 '유저 계정 탈퇴/방 나가기' 기능 추가 예정.
 
+(06/06) '채팅방 내 오프라인 시간' 확인 및 '유저 계정 탈퇴/채팅방 나가기' 기능 추가 완료.
+최종 웹 서비스가 완성되었고, 모든 버그 수정 및 필요 기능 추가 완료. 추후, 더 필요한 수정이나 기능이 있다면 계속 수정하겠습니다.
+
 
 
 -----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -30,3 +33,7 @@ However, the mood engine is not yet properly implemented, and we are currently f
 (06/05) Mood-engine operational and applied, On/Offline behavior fixed, UI bugs fixed, Room subtitle/password/max-player behavior fixed, Room host delegation authority applied.
 
 Upcoming projects include verifying and fixing 'Offline Time' bugs and adding 'User Account Deletion/Leave Room' features.
+
+(06/06) Added features to check 'Chat Room Offline Time' and 'Delete User Account/Leave Chat Room'.
+
+The final web service is complete, with all bugs fixed and necessary features added. We will continue to make updates if any further modifications or features are needed in the future.
