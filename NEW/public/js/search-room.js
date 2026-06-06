@@ -129,7 +129,6 @@ async function fetchAndRenderRooms(page, searchQuery = "") {
                     <div class="card-body">
                         <h5 class="card-title mb-1">${safeTitle}</h5>
                         
-                        <!-- Subtitle 표시 -->
                         ${room.subtitle ? `<p class="card-text text-muted mb-2 small">${escapeHTML(room.subtitle)}</p>` : ''}
                         
                         <div class="d-flex justify-content-between align-items-center">
@@ -195,5 +194,12 @@ document.getElementById('searchInput').addEventListener('keypress', function (e)
         searchRooms();
     }
 });
+
+// 방 목록 자동 새로고침 (5초마다)
+setInterval(() => {
+    if (!isFetching) {
+        fetchAndRenderRooms(currentPage, currentSearchQuery);
+    }
+}, 5000);
 
 fetchAndRenderRooms(currentPage);

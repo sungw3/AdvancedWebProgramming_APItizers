@@ -67,6 +67,36 @@ let isConnected = false;
 let reconnectAttempts = 0;
 const MAX_RECONNECT = 5;
 
+async function checkRoomBeforeJoin() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/rooms/${roomId}/`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (!response.ok) {
+            alert("방 정보를 불러올 수 없습니다.");
+            window.location.href = 'search-room.html';
+            return false;
+        }
+
+        const data = await response.json();
+        const currentOnlineUsers = data.onlineCount ?? (data.users ? data.users.length : 0);
+        const maxUsers = data.maxParticipants || 6;
+
+        if (currentOnlineUsers >= maxUsers) {
+            alert("방이 가득 찼습니다. 입장할 수 없습니다.");
+            window.location.href = 'search-room.html';
+            return false;
+        }
+
+        return true;
+    } catch (error) {
+        alert("방 정보를 확인하는 중 오류가 발생했습니다.");
+        window.location.href = 'search-room.html';
+        return false;
+    }
+}
+
 function connectWebSocket() {
     try {
         socket = new WebSocket(wsUrl);
@@ -92,8 +122,15 @@ function connectWebSocket() {
             }
         };
 
-        socket.onclose = function () {
+        socket.onclose = function (event) {
             isConnected = false;
+
+            if (event.reason === "Room is full") {
+                alert("방이 가득 찼습니다. 입장할 수 없습니다.");
+                window.location.href = 'search-room.html';
+                return;
+            }
+
             if (reconnectAttempts < MAX_RECONNECT) {
                 reconnectAttempts++;
                 showToast(`Disconnected. Reconnecting... (${reconnectAttempts}/${MAX_RECONNECT})`, 'error');
@@ -106,7 +143,6 @@ function connectWebSocket() {
         socket.onerror = function (error) {
             console.error('WebSocket Error:', error);
         };
-
     } catch (e) {
         showToast('WebSocket initialization failed.', 'error');
     }
@@ -117,7 +153,6 @@ function renderChatMessage(data) {
     const safeText = escapeHTML(data.message);
     const safeSender = escapeHTML(data.senderName);
 
-    // 감정 클래스 정규화 (핵심 수정)
     let rawEmotion = data.emotion || 'neutral';
     const emotionClass = rawEmotion.startsWith('emotion_') 
         ? rawEmotion 
@@ -197,12 +232,18 @@ async function fetchRoomInitialData() {
         if (!response.ok) throw new Error('Failed to load room data');
         
         const data = await response.json();
-        
-        if (data.hostName === myName) {
-            document.getElementById('hostSettingsMenu').style.display = 'block';
-        }
-        if (data.users) renderUserList(data.users);
+        const isHost = data.hostName === myName;
 
+        // 방장 여부에 따라 UI 제어
+        if (isHost) {
+            document.getElementById('hostSettingsMenu').style.display = 'block';
+            document.getElementById('leaveRoomBtn').style.display = 'none';
+        } else {
+            document.getElementById('hostSettingsMenu').style.display = 'none';
+            document.getElementById('leaveRoomBtn').style.display = 'block';
+        }
+
+        if (data.users) renderUserList(data.users);
         if (data.messages) {
             data.messages.forEach(msg => renderChatMessage(msg));
         }
@@ -212,11 +253,42 @@ async function fetchRoomInitialData() {
     }
 }
 
+// 방 나가기 버튼
+document.getElementById('leaveRoomBtn')?.addEventListener('click', async () => {
+    if (!confirm("정말로 이 방에서 나가시겠습니까?")) return;
+
+    try {
+        if (socket && isConnected) {
+            socket.close();
+        }
+
+        const response = await fetch(`${API_BASE_URL}/rooms/${roomId}/leave/`, {
+            method: 'POST',
+            headers: { 
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (response.ok) {
+            alert("방에서 나왔습니다.");
+            window.location.replace('search-room.html');
+        } else {
+            showToast('방 나가기에 실패했습니다.', 'error');
+        }
+    } catch (error) {
+        console.error(error);
+        showToast('방 나가기 중 오류가 발생했습니다.', 'error');
+    }
+});
+
 document.getElementById('deleteRoomBtn')?.addEventListener('click', async (e) => {
     e.preventDefault();
     if(!confirm("Warning: Deleting the room will remove all data. Are you sure you want to delete it?")) return;
 
     try {
+        if (socket && isConnected) socket.close();
+
         const response = await fetch(`${API_BASE_URL}/rooms/${roomId}/`, {
             method: 'DELETE',
             headers: { 'Authorization': `Bearer ${token}` }
@@ -249,13 +321,16 @@ document.getElementById('delegateHostBtn')?.addEventListener('click', async (e) 
         });
 
         if (response.ok) {
-            showToast(`${newHostName} is now the host.`);
+            showToast(`${newHostName}에게 방장 권한을 위임했습니다.`);
             document.getElementById('hostSettingsMenu').style.display = 'none';
+            await fetchRoomInitialData();
         } else {
-            showToast('Failed to delegate host: User not found or insufficient permissions.', 'error');
+            const errorData = await response.json().catch(() => ({}));
+            showToast(errorData.detail || '방장 위임에 실패했습니다.', 'error');
         }
     } catch (error) {
         console.error(error);
+        showToast('방장 위임 중 오류가 발생했습니다.', 'error');
     }
 });
 
@@ -284,5 +359,8 @@ window.addEventListener('beforeunload', function () {
     });
 })();
 
-// WebSocket 연결 시작
-connectWebSocket();
+checkRoomBeforeJoin().then(canJoin => {
+    if (canJoin) {
+        connectWebSocket();
+    }
+});

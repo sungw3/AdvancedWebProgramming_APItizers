@@ -167,12 +167,14 @@ async def list_rooms(page: int = 1, limit: int = 20, search: str = ""):
     filtered = []
     for rid, r in rooms_db.items():
         if not q or q in r.get("title","").lower() or q in str(r.get("host","")).lower():
+            # 온라인 유저만 카운트
+            online_count = sum(1 for p in r.get("participants", {}).values() if p.get("is_online", False))
             filtered.append({
                 "id": rid,
                 "title": r.get("title"),
-                "subtitle": r.get("subtitle", ""),          # ← subtitle 추가
+                "subtitle": r.get("subtitle", ""),
                 "host": r.get("host"),
-                "count": r.get("count", len(r.get("participants", {}))),
+                "count": online_count,
                 "max": r.get("max_participants", 6),
                 "is_private": r.get("is_private", False)
             })
@@ -192,7 +194,6 @@ async def create_room(data: CreateRoomRequest, user=Depends(get_current_user)):
         "max_participants": data.maxParticipants,
         "is_private": data.isPrivate,
         "password": data.password if data.isPrivate else None,
-        "count": 1,
         "created_at": datetime.now().isoformat(),
         "messages": [],
         "participants": {nick: {"is_online": False, "last_seen": None}}
@@ -220,7 +221,17 @@ async def get_room(room_id: str, user=Depends(get_current_user)):
     if room_id not in rooms_db:
         raise HTTPException(404, "방을 찾을 수 없습니다")
     r = rooms_db[room_id]
-    return {"hostName": r["host"], "users": get_participants(r), "messages": get_messages(r)}
+    
+    # 온라인 유저 수 계산
+    online_count = sum(1 for p in r.get("participants", {}).values() if p.get("is_online", False))
+    
+    return {
+        "hostName": r["host"],
+        "maxParticipants": r.get("max_participants", 6),
+        "onlineCount": online_count,                    # ← 추가
+        "users": get_participants(r),
+        "messages": get_messages(r)
+    }
 
 @app.delete("/api/rooms/{room_id}/")
 async def delete_room(room_id: str, user=Depends(get_current_user)):
@@ -236,16 +247,44 @@ async def delete_room(room_id: str, user=Depends(get_current_user)):
 
 @app.post("/api/rooms/{room_id}/delegate/")
 async def delegate_host(room_id: str, data: DelegateHostRequest, user=Depends(get_current_user)):
-    if room_id not in rooms_db or rooms_db[room_id]["host"] != user["nickname"]:
+    if room_id not in rooms_db:
+        raise HTTPException(404, "방을 찾을 수 없습니다")
+
+    room = rooms_db[room_id]
+
+    if room["host"] != user["nickname"]:
         raise HTTPException(403, "권한이 없습니다")
-    rooms_db[room_id]["host"] = data.new_host
-    return {"status": "success", "newHost": data.new_host}
+
+    new_host = data.new_host
+
+    if new_host not in room.get("participants", {}):
+        raise HTTPException(404, "해당 유저가 방에 존재하지 않습니다")
+
+    room["host"] = new_host
+    return {"status": "success", "newHost": new_host}
 
 @app.post("/api/rooms/{room_id}/leave/")
 async def leave_room(room_id: str, user=Depends(get_current_user)):
     if room_id in rooms_db and user["nickname"] in rooms_db[room_id].get("participants", {}):
         rooms_db[room_id]["participants"][user["nickname"]]["is_online"] = False
     return {"status": "ok"}
+
+# ==================== 회원 탈퇴 (추가) ====================
+@app.delete("/api/users/me")
+async def delete_my_account(user=Depends(get_current_user)):
+    user_id = user["id"]
+    
+    # users_db에서 삭제
+    if user_id in users_db:
+        del users_db[user_id]
+        save_users()
+    
+    # 해당 유저의 모든 토큰 무효화
+    tokens_to_remove = [t for t, uid in tokens_db.items() if uid == user_id]
+    for token in tokens_to_remove:
+        del tokens_db[token]
+    
+    return {"message": "계정이 성공적으로 삭제되었습니다."}
 
 # ==================== WebSocket ====================
 @app.websocket("/ws/chat/{room_id}/")
@@ -260,6 +299,15 @@ async def websocket_chat(ws: WebSocket, room_id: str, token: str = Query(...)):
         await ws.close(1003); return
 
     room = rooms_db[room_id]
+
+    # 온라인 유저만 카운트
+    online_count = sum(1 for p in room.get("participants", {}).values() if p.get("is_online", False))
+    max_participants = room.get("max_participants", 6)
+
+    if online_count >= max_participants:
+        await ws.close(code=1008, reason="Room is full")
+        return
+
     await ws.accept()
     active_connections.setdefault(room_id, {})[nick] = ws
     room.setdefault("participants", {}).setdefault(nick, {"is_online": False, "last_seen": None})["is_online"] = True

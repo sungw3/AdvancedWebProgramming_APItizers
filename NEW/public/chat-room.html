@@ -38,26 +38,31 @@
                 </div>
 
                 <div class="d-flex align-items-center">
+                    <!-- 모바일 멤버 목록 버튼 -->
                     <button class="btn btn-light d-md-none border me-2" type="button" data-bs-toggle="offcanvas"
                         data-bs-target="#userListOffcanvas">
                         <i class="bi bi-people-fill"></i>
                     </button>
 
-                    <div class="dropdown me-3" id="hostSettingsMenu" style="display: none;">
+                    <!-- 방장 전용 설정 메뉴 -->
+                    <div class="dropdown me-2" id="hostSettingsMenu" style="display: none;">
                         <button class="btn btn-outline-light btn-sm dropdown-toggle" type="button"
                             data-bs-toggle="dropdown">
                             <i class="bi bi-gear-fill"></i>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item text-light" href="#" id="delegateHostBtn">Give Host</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item text-danger fw-bold" href="#" id="deleteRoomBtn">Delete Room
-                                    Permanently</a></li>
+                            <li><a class="dropdown-item" href="#" id="delegateHostBtn">Give Host</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger fw-bold" href="#" id="deleteRoomBtn">Delete Room Permanently</a></li>
                         </ul>
                     </div>
 
+                    <!-- 일반 멤버용 방 나가기 버튼 -->
+                    <button id="leaveRoomBtn" class="btn btn-outline-danger btn-sm me-3" style="display: none;">
+                        <i class="bi bi-box-arrow-right"></i> 방 나가기
+                    </button>
+
+                    <!-- 테마 변경 버튼 -->
                     <button class="theme-toggle-btn" type="button">
                         <i class="bi bi-moon-fill"></i>
                     </button>
@@ -73,7 +78,7 @@
             <div class="chat-input-area">
                 <form id="chatForm" class="d-flex gap-2">
                     <input type="text" id="messageInput" class="form-control rounded-pill px-4"
-                    placeholder="Type a message..." autocomplete="off" inputmode="text">
+                           placeholder="Type a message..." autocomplete="off">
                     <button type="submit" class="btn btn-primary rounded-pill px-4" id="sendBtn">
                         <i class="bi bi-send-fill"></i> Send
                     </button>
@@ -82,6 +87,7 @@
         </main>
     </div>
 
+    <!-- 오프캔버스 (모바일 멤버 목록) -->
     <div class="offcanvas offcanvas-start" tabindex="-1" id="userListOffcanvas">
         <div class="offcanvas-header border-bottom">
             <a href="search-room.html" class="text-decoration-none text-dark">
@@ -89,10 +95,10 @@
             </a>
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
         </div>
-        <div class="offcanvas-body">
-        </div>
+        <div class="offcanvas-body"></div>
     </div>
 
+    <!-- 토스트 -->
     <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1055;">
         <div id="appToast" class="toast align-items-center text-bg-primary border-0" role="alert" aria-live="assertive"
             aria-atomic="true">
