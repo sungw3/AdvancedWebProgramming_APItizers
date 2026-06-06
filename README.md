@@ -29,11 +29,12 @@ django를 이용하여 챗 웹 구현하기 + llm을 이용한 채팅 감정 분
 - 백엔드에서 받을 데이터 임시로 넣어둔 디자인 확인하는 링크
 
 ## 서버 (backend)
-- Framework: Django
-- Real-time Chat: Django Channels + WebSocket
-- ASGI Server: Daphne (required for WebSocket)
-- Channel Layer: Redis
-- Database: SQLite
+- Framework: FastAPI
+- Real-time Chat: WebSocket
+- ASGI Server: Uvicorn
+- Channel Layer: In-Memory
+- Database: JSON File + In-Memory
+- Frontend: HTML/CSS/JS (Bootstrap)
 
 ## 감정분석기능 (mood finding algorithm)
 Deepseek V4 pro를 사용하여 이전 감정 리스트와 함께 감정 분석을 진행
